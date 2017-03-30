@@ -19,6 +19,14 @@ export default {
   },
   components: {
     vHeader: vHeader
+  },
+  created () {
+    this.$http.get('/api/user/')
+      .then((res) => {
+        
+      }, (err) => {
+        this.$router.push({ path: '/login' })
+      })
   }
 }
 </script>

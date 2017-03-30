@@ -42,7 +42,10 @@ export default {
       this.$http.get('/api/user/logout')
         .then ((res) => {
           console.log('登出了')
-          this.$router.push({ path: '/login' })
+          if (res.status === 200) {
+            // this.delCookie('hellocookie')
+            this.$router.push({ path: '/login' })
+          }
         })
     },
   }

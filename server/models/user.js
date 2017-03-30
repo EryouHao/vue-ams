@@ -1,4 +1,4 @@
-var pool = require('./db');
+var pool = require('../conf/db');
 var crypto = require('crypto');
 module.exports = {
   // 对字符串进行sha1加密 散列算法与密钥结合

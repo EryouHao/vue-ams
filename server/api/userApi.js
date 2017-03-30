@@ -8,7 +8,7 @@ var $util = require('../util/util');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 
-var user_m = require('../conf/user');
+var user_m = require('../models/user');
 var bodyParser = require('body-parser').json();
 
 // const auth = expressJwt({secret: 'ams'});
@@ -53,6 +53,13 @@ router.post('/login', (req, res, next) => {
 	})
 })
 
+router.get('/', (req, res, next) => {
+	if (!req.session.user) {
+		console.log('还未登陆哦！');
+		throw Error('error')
+	}
+})
+
 // 注册
 router.post('/reg',bodyParser, (req, res, next) => {
 	var username = req.body.username || 'fehey',
@@ -71,8 +78,12 @@ router.post('/reg',bodyParser, (req, res, next) => {
 
 //登出
 router.get('/logout', (req, res, next) => {
+	console.log(req.session.user)
+	
 	req.session.destroy();
-	res.redirect('/login');
+	console.log(req.session)
+	res.json({ok: true})
+	// res.redirect('/login');
 })
 
 // 增加用户接口
