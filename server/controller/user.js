@@ -12,7 +12,7 @@ const Login = (req, res) => {
     password: sha1(req.body.password),
     token: createToken(this.username)
   } 
-  router.post('/login', userLogin, (req, res) {
+  router.post('/login', userLogin, (req, res) => {
     
   })
 }
