@@ -33,12 +33,14 @@ app.use((req, res, next) => {
   if (req.session.user) {
     res.locals.user = {
       uid: req.session.user.uid,
-      username: req.session.user.username
+      username: req.session.user.username,
+      userright: req.session.user.userright
     }
+    console.log('执行了')
   } else {
     res.locals.user = {};
   }
-  console.log('res.locals:' + res.locals.user);
+  console.log('res.locals:' + res.locals.user.userright);
   next();
 })
 

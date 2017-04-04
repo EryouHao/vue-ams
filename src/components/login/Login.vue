@@ -6,10 +6,10 @@
         <el-input type="text" v-model="form.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input type="password" v-model="form.password"></el-input>
+        <el-input type="password" v-model="form.password" @keyup.native.enter="login"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="login">登录</el-button>
+        <el-button type="primary" @click="sub()">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -17,7 +17,7 @@
 
 <script>
 // import api from '../axios'
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -28,6 +28,11 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapActions({
+      UserLogin: 'UserLogin',
+    })
+  },
   methods: {
     login() {
       console.log(this.form.username)
@@ -36,15 +41,21 @@ export default {
         username: this.form.username,
         password: this.form.password
       }).then ((res) => {
-        console.log(res)
-        console.log(res.code)
-        console.log(this.$router)
+        // console.log(res)
+        console.log(res.body)
+        console.log(res.config.data)
+        // console.log(res.code)
+        // console.log(this.$router)
         if (res.status === 200) {
           this.$router.push({ path: '/' })
         }
       }).catch((err) => {
         console.log(err)
       })
+    },
+    sub() {
+      console.log(this.form)
+      this.$store.dispatch('UserLogin', this.form)
     }
   }
 }

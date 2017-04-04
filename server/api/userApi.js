@@ -37,16 +37,31 @@ router.post('/login', (req, res, next) => {
 	var password_hash = user_m.hash(password);
 
 	user_m.login(username, password_hash, function (result) {
+		console.log('登录方法得到的results是')
 		console.log(result)
 		if (result.length) {
 			// 将数据保存到名为user的session中
 			req.session.user = {
 				uid: result[0].id,
-				username: username
+				username: username,
+				userright: result[0].right_id,
 			}
-			console.log(req.session)
+			res.user = {
+				uid: req.session.user.uid,
+				username: req.session.user.username,
+				userright: req.session.user.userright
+			}
+			jsonWrite(res, result)
+			// console.log('------------')
+			// console.log(res.locals.user)
+			// console.log(res.data)
+			// res.cookie('userinfo', res.locals.user)
+			// console.log('----------')
+			// res.data.userName = req.session.user.username
+			// res.data.userRight = req.data.userRight 
+			// console.log(req.session)
 			console.log('登录成功');
-			res.redirect('/');
+			// res.redirect('/');
 		} else {
 			console.log('登录失败！');
 		}

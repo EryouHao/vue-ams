@@ -27,8 +27,9 @@ module.exports = {
       console.log(username, password);
     pool.getConnection(function (err, connection) {
       if (err) throw err;
-      connection.query('SELECT `id` FROM `users` WHERE `user_name`=? AND `user_psd`=?', [username, password], function (err, result) {
+      connection.query('SELECT * FROM `users` WHERE `user_name`=? AND `user_psd`=?', [username, password], function (err, result) {
         if (err) throw err;
+        console.log('登录里面的result是：')
         console.log('result' + result)
         cb(result);
         connection.release();
