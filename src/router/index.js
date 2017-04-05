@@ -36,7 +36,8 @@ export default new Router({
       },
       {
         path: '/user',
-        component: User
+        component: User,
+        meta: {requiresAuth: true}
       },
       {
         path: '/personal',

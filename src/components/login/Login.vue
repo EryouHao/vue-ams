@@ -17,7 +17,7 @@
 
 <script>
 // import api from '../axios'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -29,6 +29,11 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      // getCount return value 将会存在别名为 count 的data 上
+      name: 'getName',
+      right: 'getRight'
+    }),
     ...mapActions({
       UserLogin: 'UserLogin',
     })
@@ -56,6 +61,12 @@ export default {
     sub() {
       console.log(this.form)
       this.$store.dispatch('UserLogin', this.form)
+        .then(() => {
+          const state = this.$store.state
+          console.log('state')
+          console.log(state)
+          // localStorage.name = 
+        })
     }
   }
 }

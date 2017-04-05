@@ -5,9 +5,12 @@ export const UserLogin = ({ commit }, data) => {
   console.log('data', data)
   api.localLogin(data).then(function (response) {
     console.log('response')
+    console.log(response)
     console.log(response.data[0].user_state)
+    var user = response.data[0]
+    // ...
     if( response.data.type == true) {
-      commit(USER_SIGNIN, response.data.token);
+      commit(USER_SIGNIN, user);
       window.location = '/'
     }else{
       // window.location = '/login'

@@ -7,10 +7,10 @@
       <el-col :span="16">
         <el-menu :router="true" :default-active="this.$router.currentRoute.path" mode="horizontal" @select="handleSelect">
           <el-menu-item index="/">首页</el-menu-item>
-          <el-menu-item index="/addasset">资产申报</el-menu-item>
+          <el-menu-item index="/addasset" v-if="addasset">资产申报</el-menu-item>
           <el-menu-item index="/queryasset">资产查询</el-menu-item>
-          <el-menu-item index="/callasset">资产调用</el-menu-item>
-          <el-menu-item index="/user">用户管理</el-menu-item>
+          <el-menu-item index="/callasset" v-if="callasset">资产调用</el-menu-item>
+          <el-menu-item index="/user" v-if="isAdmin">用户管理</el-menu-item>
           <el-menu-item index="/personal">个人设置</el-menu-item>
         </el-menu>  
       </el-col>
@@ -26,13 +26,21 @@
 </template>
 
 <script>
+import { types, auth } from '../../lib/auth'
+
 export default {
   name: 'hello',
   data () {
     return {
-      username: 'EryouHao'
+      username: 'EryouHao',
+      isAdmin: auth.checkAuth(types.isAdmin),
+      addasset: auth.checkAuth(types.addasset),
+      callasset: auth.checkAuth(types.callasset)
     }
   },
+  // created() {
+  //   isAdmin = localStorage.getItem('right')
+  // },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath)
@@ -48,6 +56,7 @@ export default {
           }
         })
     },
+
   }
 }
 </script>
