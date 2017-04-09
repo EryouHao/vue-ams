@@ -21,12 +21,12 @@ export default {
     vHeader: vHeader
   },
   created () {
-    this.$http.get('/api/user/')
-      .then((res) => {
-        
-      }, (err) => {
-        this.$router.push({ path: '/login' })
-      })
+//    this.$http.get('/api/user/')
+//      .then((res) => {
+//
+//      }, (err) => {
+//        this.$router.push({ path: '/login' })
+//      })
   }
 }
 </script>

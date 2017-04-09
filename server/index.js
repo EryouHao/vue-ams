@@ -22,10 +22,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(session({
   secret: 'fehey',
-  cookie: { maxAge: 30*60*1000 },
+  cookie: { maxAge: 60*60*1000 },
   resave: false,
   saveUninitialized: true,
-  name: 'hellocookie' // 若不设置 默认为 connect.sid ,name可换成key
+  name: 'fehey' // 若不设置 默认为 connect.sid ,name可换成key
 }));
 
 app.use((req, res, next) => {

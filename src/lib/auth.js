@@ -1,7 +1,7 @@
 export const types = {
-  isAdmin: 0,
-  addasset: 1,
-  callasset: 1
+  isAdmin: '0',
+  addasset: '1',
+  callasset: '1'
 }
 
 export const auth = {

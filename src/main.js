@@ -32,12 +32,12 @@ Vue.prototype.getCookie = getCookie;
 
 //删除cookie
 Vue.prototype.delCookie =(name) => {
-    var exp = new Date();
-    exp.setTime(exp.getTime() - 1);
-    var cval = getCookie(name);
-    if (cval != null)
-      document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
-  }
+  var exp = new Date();
+  exp.setTime(exp.getTime() - 1);
+  var cval = getCookie(name);
+  if (cval != null)
+    document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+}
 
 
 // router.beforeEach(({meta, path}, from, next) => {

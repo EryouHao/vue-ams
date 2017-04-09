@@ -1,5 +1,5 @@
 import api from '../api'
-import { USER_SIGNIN,USER_SIGNOUT,USER_REG } from './types'
+import * as types from './types'
 
 export const UserLogin = ({ commit }, data) => {
   console.log('data', data)
@@ -9,9 +9,10 @@ export const UserLogin = ({ commit }, data) => {
     console.log(response.data[0].user_state)
     var user = response.data[0]
     // ...
-    if( response.data.type == true) {
-      commit(USER_SIGNIN, user);
-      window.location = '/'
+    if(true) {
+      console.log('发送了commit')
+      commit(types.USER_SIGNIN, user);
+      // window.location = '/'
     }else{
       // window.location = '/login'
     }
@@ -23,7 +24,7 @@ export const UserLogin = ({ commit }, data) => {
 
 export const UserLogout = ({ commit }, data) => {
   api.localLogout(data).then(function (response) {
-    commit(USER_SIGNOUT);
+    commit(types.USER_SIGNOUT);
     window.location = '/login'
   })
     .catch(function (error) {
@@ -34,7 +35,7 @@ export const UserLogout = ({ commit }, data) => {
 export const UserReg = ({ commit }, data) => {
   api.localReg(data).then(function (response) {
     if( response.data.type == true) {
-      commit(USER_REG, response.data.token);
+      commit(types.USER_REG, response.data.token);
       window.location = '/person'
     }
   })

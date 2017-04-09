@@ -21,7 +21,7 @@ module.exports = {
       })
     })
   },
-  
+
   // 登录
   login: function (username, password, cb) {
       console.log(username, password);
@@ -31,6 +31,45 @@ module.exports = {
         if (err) throw err;
         console.log('登录里面的result是：')
         console.log('result' + result)
+        cb(result);
+        connection.release();
+      })
+    })
+  },
+
+  // 增加用户
+  addUser: function (username, mobile, accountname, password, right, state, cb) {
+
+    let params = {
+      username: username,
+      mobile: mobile,
+      accountname: accountname,
+      password: this.hash(password),
+      right: right,
+      state: state
+    }
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      connection.query('INSERT INTO `users` (user_name,user_psd,user_account,user_state,right_id,user_mobile) values (?, ?, ?, ?, ?, ?)',
+        [params.username, params.password, params.accountname, params.state, params.right, params.mobile], (err, results) => {
+        if (err) throw err;
+
+        cb(results);
+
+        connection.release();
+      })
+
+    })
+  },
+
+  // 查询用户列表
+  queryAllUser: function (cb) {
+    pool.getConnection((err,connection) => {
+      if (err) throw err;
+      connection.query('SELECT id,user_name,user_account,right_id,user_mobile FROM `users`', (err, result) => {
+        if (err) throw err;
+        console.log('查询用户列表结果result是')
+        console.log(result)
         cb(result);
         connection.release();
       })

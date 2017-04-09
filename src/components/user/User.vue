@@ -8,13 +8,13 @@
       :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="account"
-        label="账号"
+        prop="name"
+        label="姓名"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="姓名"
+        prop="accountName"
+        label="账号"
         width="180">
       </el-table-column>
       <el-table-column
@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column
         prop="right"
-        label="权限">
+        label="角色">
       </el-table-column>
       <el-table-column label="操作">
       <template scope="scope">
@@ -55,14 +55,21 @@
           <el-form-item label="账户名">
             <el-input v-model="form.accountName"></el-input>
           </el-form-item>
+          <el-form-item label="角色">
+            <el-select v-model="form.right" placeholder="请选择角色">
+              <el-option label="管理员" value="0"></el-option>
+              <el-option label="老师" value="1"></el-option>
+              <el-option label="实验室" value="2"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="密码">
             <el-input v-model="form.password"></el-input>
           </el-form-item>
           <el-form-item label="确认密码">
-            <el-input v-model="form.confirmpass"></el-input>
+            <el-input v-model="form.confirmPass"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="addUser">保存</el-button>
             <el-button type="default" @click="toggleAddUser">取消</el-button>
           </el-form-item>
         </el-form>
@@ -72,7 +79,7 @@
   </div>
 </template>
 
-<script lang="babel">
+<script>
 export default {
   data () {
     return {
@@ -80,22 +87,16 @@ export default {
         name: '',
         mobile: '',
         accountName: '',
+        right: '',
         password: '',
-        confirmpass: '',
+        confirmPass: '',
       },
       showAddUser: false,
-      tableData: [{
-        account: 'haoeryou@qq.com',
-        name: '张三',
-        mobile: '15733296572',
-        right: '管理员',
-      }, {
-        account: 'fehey@qq.com',
-        name: '李四',
-        mobile: '15733296577',
-        right: '老师',
-      }],
+      tableData: [],
     }
+  },
+  created() {
+    this.queryAllUser();
   },
   methods: {
     addUser() {
@@ -118,8 +119,47 @@ export default {
         this.$message({
           type: 'info',
           message: '已取消删除'
-        });          
+        });
       });
+    },
+    addUser() {
+      console.log('执行了添加用户')
+      this.$http.post('/api/user/addUser', {
+        username: this.form.name,
+        mobile: this.form.mobile,
+        accountName: this.form.accountName,
+        right: this.form.right,
+        password: this.form.password,
+      }).then ((res) => {
+        if (res.status === 200) {
+          this.$router.push({ path: '/' })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    queryAllUser() {
+      console.log('执行了查询所有用户')
+      this.$http.get('/api/user/queryAllUser')
+        .then((res) => {
+          if (res.status === 200) {
+            console.log('查询成功了')
+            res.data.forEach((user) => {
+              let tmp = {
+                name: user.user_name,
+                accountName: user.user_account,
+                mobile: user.user_mobile,
+                right: user.right_id
+              }
+              this.tableData.push(tmp)
+            })
+//            this.tableData = res.data;
+            console.log(this.tableData)
+//            console.log(res)
+          }
+        }).catch((err) => {
+          console.log(err)
+      })
     }
   }
 }

@@ -1,12 +1,12 @@
 <template>
   <div class="login">
     <h2 class="title">资产管理系统</h2>
-    <el-form ref="form" :model="form" label-width="100px">
-      <el-form-item label="用户名">
-        <el-input type="text" v-model="form.username"></el-input>
+    <el-form ref="form" :model="form" label-width="">
+      <el-form-item label="">
+        <el-input type="text" v-model="form.username" placeholder="用户名"></el-input>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input type="password" v-model="form.password" @keyup.native.enter="login"></el-input>
+      <el-form-item label="">
+        <el-input type="password" v-model="form.password" placeholder="密码" @keyup.native.enter="login"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="sub()">登录</el-button>
@@ -63,9 +63,8 @@ export default {
       this.$store.dispatch('UserLogin', this.form)
         .then(() => {
           const state = this.$store.state
-          console.log('state')
+          console.log('state 里面的内容是')
           console.log(state)
-          // localStorage.name = 
         })
     }
   }

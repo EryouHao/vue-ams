@@ -52,14 +52,6 @@ router.post('/login', (req, res, next) => {
 				userright: req.session.user.userright
 			}
 			jsonWrite(res, result)
-			// console.log('------------')
-			// console.log(res.locals.user)
-			// console.log(res.data)
-			// res.cookie('userinfo', res.locals.user)
-			// console.log('----------')
-			// res.data.userName = req.session.user.username
-			// res.data.userRight = req.data.userRight 
-			// console.log(req.session)
 			console.log('登录成功');
 			// res.redirect('/');
 		} else {
@@ -81,7 +73,7 @@ router.post('/reg',bodyParser, (req, res, next) => {
 		password = req.body.password || '123456';
 	var password_hash = user_m.hash(password),
 		regtime = parseInt(Date.now() / 1000);
-	
+
 	// 数据库处理
 	user_m.reg(username, password_hash, regtime, function(result) {
 		if (result.affectedRows) {
@@ -94,7 +86,7 @@ router.post('/reg',bodyParser, (req, res, next) => {
 //登出
 router.get('/logout', (req, res, next) => {
 	console.log(req.session.user)
-	
+
 	req.session.destroy();
 	console.log(req.session)
 	res.json({ok: true})
@@ -103,25 +95,19 @@ router.get('/logout', (req, res, next) => {
 
 // 增加用户接口
 router.post('/addUser', (req, res) => {
-	pool.getConnection(function (err, conn) {
-		var sql = $sql.user.add;
-		var params = req.body;
-		console.log(params);
-		conn.query(sql, [params.username, params.age], function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-			if (result) {
-				jsonWrite(res, result);
-			}
-			// 以json形式，把操作结果返回给前台页面
-			// jsonWrite(res, result);
-
-			// 释放连接
-			conn.release();
-		})
-	})
-	
+  var username = req.body.username || 'zhangfang',
+      password = req.body.password || '123',
+      mobile = req.body.mobile || 15733296573,
+      accountName = req.body.accountName || 'zhangfang@qq.com',
+      right = req.body.right || 1,
+      state = 0;
+  console.log('req')
+  console.log(req)
+  // 数据库处理
+  user_m.addUser(username,mobile,accountName,password,right,state, (result) => {
+    console.log('添加用户成功')
+    console.log(result)
+  })
 });
 
 // 删除用户接口
@@ -142,7 +128,7 @@ router.post('/deleteUser', (req, res) => {
 			conn.release();
 		})
 	})
-	
+
 });
 
 // 更新用户接口
@@ -162,21 +148,10 @@ router.post('/updateUser', (req, res) => {
 	})
 });
 // 查询用户接口
-router.get('/queryAll', (req, res) => {
-	pool.getConnection(function(err, conn){
-		var sql = $sql.user.queryAll;
-		conn.query(sql, function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-			if (result) {
-				jsonWrite(res, result);
-			}
-
-			// 释放连接
-			conn.release();
-		})
-	})
+router.get('/queryAllUser', (req, res) => {
+	user_m.queryAllUser((result) => {
+	  console.log(jsonWrite(res, result))
+  })
 });
 
 module.exports = router;
