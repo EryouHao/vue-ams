@@ -74,5 +74,20 @@ module.exports = {
         connection.release();
       })
     })
+  },
+
+  // 删除用户
+  deleteUser: function (id, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      connection.query('DELETE FROM `users` WHERE id=?', id, (err, results) => {
+        if (err) throw err;
+
+        cb(results);
+
+        connection.release();
+      })
+    })
   }
+
 }

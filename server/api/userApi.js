@@ -112,23 +112,10 @@ router.post('/addUser', (req, res) => {
 
 // 删除用户接口
 router.post('/deleteUser', (req, res) => {
-	pool.getConnection(function(err, conn) {
-		var sql = $sql.user.delete;
-		var params = req.body;
-		console.log(params);
-		conn.query(sql, [params.id], function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-			if (result) {
-				jsonWrite(res, result);
-			}
-
-			// 释放连接
-			conn.release();
-		})
-	})
-
+  user_m.deleteUser(req.body.id, (result) => {
+    console.log('删除用户成功')
+    console.log(result)
+  })
 });
 
 // 更新用户接口

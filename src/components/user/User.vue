@@ -2,7 +2,7 @@
   <div class="user">
     <div class="title-content">
       <h2 class="title">用户列表</h2>
-      <el-button class="btn-add" type="default" @click="toggleAddUser" >新增用户</el-button>
+      <el-button class="btn-add" type="default" @click="toggleAddUser">新增用户</el-button>
     </div>
     <el-table
       :data="tableData"
@@ -25,19 +25,19 @@
         prop="right"
         label="角色">
       </el-table-column>
-      <el-table-column label="操作">
-      <template scope="scope">
-        <el-button
-          size="small"
-          icon="edit"
-          @click=""></el-button>
-        <el-button
-          size="small"
-          type="danger"
-          icon="delete"
-          @click="confirmMsg"></el-button>
-      </template>
-    </el-table-column>
+      <el-table-column label="操作" prop="id">
+        <template scope="id">
+          <el-button
+            size="small"
+            icon="edit"
+            @click=""></el-button>
+          <el-button
+            size="small"
+            type="danger"
+            icon="delete"
+            @click="deleteUser(id.row.id)"></el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="add-content" v-show="showAddUser">
       <div class="header">
@@ -105,16 +105,28 @@ export default {
     toggleAddUser () {
       this.showAddUser = !this.showAddUser;
     },
-    confirmMsg() {
+    deleteUser(id) {
+      console.log('id为')
+      console.log(id)
       this.$confirm('您确定要删除此用户吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+        this.$http.post('/api/user/deleteUser', {
+            id: id
+        }).then((res) => {
+          // 待添加 前端 用户数组减少
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '删除失败'
+          });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -146,6 +158,7 @@ export default {
             console.log('查询成功了')
             res.data.forEach((user) => {
               let tmp = {
+                id: user.id,
                 name: user.user_name,
                 accountName: user.user_account,
                 mobile: user.user_mobile,
