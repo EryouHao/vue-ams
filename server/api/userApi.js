@@ -106,7 +106,8 @@ router.post('/addUser', (req, res) => {
   // 数据库处理
   user_m.addUser(username,mobile,accountName,password,right,state, (result) => {
     console.log('添加用户成功')
-    console.log(result)
+    // console.log(result)
+		jsonWrite(res, result)
   })
 });
 
@@ -115,23 +116,15 @@ router.post('/deleteUser', (req, res) => {
   user_m.deleteUser(req.body.id, (result) => {
     console.log('删除用户成功')
     console.log(result)
+		jsonWrite(res, result)
   })
 });
 
 // 更新用户接口
 router.post('/updateUser', (req, res) => {
-	pool.getConnection(function(err, conn) {
-		var sql = $sql.user.update;
-		var params = req.body;
-		conn.query(sql, [params.username, params.age, params.id], function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-			if (result) {
-				jsonWrite(res, result);
-			}
-			conn.release();
-		});
+	let params = req.body
+	user_m.updateUser(params.username, params.accountName, params.mobile, params.right, params.state, (result) => {
+		// 待完成
 	})
 });
 // 查询用户接口

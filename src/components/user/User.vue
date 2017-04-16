@@ -30,7 +30,7 @@
           <el-button
             size="small"
             icon="edit"
-            @click=""></el-button>
+            @click="editUser(id.row.id)"></el-button>
           <el-button
             size="small"
             type="danger"
@@ -117,6 +117,7 @@ export default {
             id: id
         }).then((res) => {
           // 待添加 前端 用户数组减少
+          this.queryAllUser()
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -135,7 +136,6 @@ export default {
       });
     },
     addUser() {
-      console.log('执行了添加用户')
       this.$http.post('/api/user/addUser', {
         username: this.form.name,
         mobile: this.form.mobile,
@@ -144,18 +144,26 @@ export default {
         password: this.form.password,
       }).then ((res) => {
         if (res.status === 200) {
-          this.$router.push({ path: '/' })
+          this.queryAllUser()
+          this.showAddUser = false
+          this.$message({
+            type: 'success',
+            message: '增加成功!'
+          });
         }
       }).catch((err) => {
+        this.$message({
+          type: 'info',
+          message: '增加失败'
+        });
         console.log(err)
       })
     },
     queryAllUser() {
-      console.log('执行了查询所有用户')
+      this.tableData = []
       this.$http.get('/api/user/queryAllUser')
         .then((res) => {
           if (res.status === 200) {
-            console.log('查询成功了')
             res.data.forEach((user) => {
               let tmp = {
                 id: user.id,
@@ -166,13 +174,13 @@ export default {
               }
               this.tableData.push(tmp)
             })
-//            this.tableData = res.data;
-            console.log(this.tableData)
-//            console.log(res)
           }
         }).catch((err) => {
           console.log(err)
       })
+    },
+    editUser(id) {
+      
     }
   }
 }

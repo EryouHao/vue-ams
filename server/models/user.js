@@ -88,6 +88,20 @@ module.exports = {
         connection.release();
       })
     })
+  },
+
+  //修改用户
+  // UPDATE <表名> SET 列名=值表达式[,列名=值表达式…]
+  // [WHERE 条件表达式]
+  updateUser: function (username, accountname, mobile, right, state, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      connection.query('UPDATE `users` SET user_name=?,user_account=?,right_id=?,user_mobile=?,user_state=? WHERE id=?', [username, accountname, right, mobile, state], (err, results) => {
+        if (err) throw err;
+        cb(results);
+        connection.release();
+      })
+    })
   }
 
 }
