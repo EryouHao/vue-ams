@@ -4,100 +4,100 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="资产名称">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.assetName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="使用人">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.userName"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="资产编号">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.id"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="发票号">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.bill"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="购置日期">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-          </el-form-item>  
+              <el-date-picker type="date" placeholder="选择日期" v-model="form.buyDate" style="width: 100%;"></el-date-picker>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="单价">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.price"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="型号">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.standard"></el-input>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="规格">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.standard"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="出厂日期">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-          </el-form-item>  
+              <el-date-picker type="date" placeholder="选择日期" v-model="form.leaveDate" style="width: 100%;"></el-date-picker>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="建账日期">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-          </el-form-item>  
+              <el-date-picker type="date" placeholder="选择日期" v-model="form.submitDate" style="width: 100%;"></el-date-picker>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="使用方向">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.useDirection"></el-input>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="出厂编号">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.leaveNum"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="厂家">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.brand"></el-input>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="存放地点">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+            <el-input v-model="form.organization"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="申购单位">
-            <el-select v-model="form.region" placeholder="请选择申购单位">
+            <el-select v-model="form.organization" placeholder="请选择申购单位">
               <el-option label="单位一" value="shanghai"></el-option>
               <el-option label="单位二" value="beijing"></el-option>
             </el-select>
-          </el-form-item>   
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="购买人">
             <el-input v-model="form.name"></el-input>
-          </el-form-item>  
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
@@ -194,6 +194,7 @@ export default {
       if (this.form.count > 1) {
         console.log(this.form.count)
       }
+      console.log(this.form)
     }
   }
 }
