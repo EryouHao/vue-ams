@@ -234,8 +234,21 @@ export default {
       this.$http.post('/api/asset/addAsset', this.form)
         .then((res) => {
           if (res.status === 200) {
-            console.log('增加资产成功')
+            this.$message({
+              type: 'success',
+              message: '资产添加成功！'
+            })
+          } else {
+            this.$message({
+              type: 'info',
+              message: '资产添加失败！'
+            })
           }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '资产添加失败了!'
+          })
         })
     }
   }

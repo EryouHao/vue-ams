@@ -25,11 +25,22 @@ router.post('/addAsset', (req, res) => {
   console.log(req.body)
   const form = req.body
   console.log('session是')
-  console.log(req.session)
-  asset_m.addAsset(form, (result) => {
-    console.log('增加资产成功-api')
-    jsonWrite(res, result)
-  })
+  console.log(req.session.user.uid)
+  if (req.session.user !== null) {
+    form.userId = req.session.user.uid
+    asset_m.addAsset(form, (result) => {
+      console.log('增加资产成功-api')
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
+})
+
+// 查询资产
+router.get('/queryAsset', (req, res) => {
+  if (req.session.user !== null) {
+  }
 })
 
 module.exports = router;

@@ -69,10 +69,10 @@ module.exports = {
     })
   },
   // 查询资产
-  queryAsset: function (cb) {
+  queryAssetById: function (id,cb) {
     pool.getConnection((err, connection) => {
       if (err) throw err
-      connection.query('select * from `assets` where user_id', (err, result) => {
+      connection.query('select * from `assets` where user_id=?', id, (err, result) => {
         if (err) throw err
 
         cb(result)
