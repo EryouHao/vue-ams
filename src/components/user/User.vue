@@ -99,9 +99,6 @@ export default {
     this.queryAllUser();
   },
   methods: {
-    addUser() {
-
-    },
     toggleAddUser () {
       this.showAddUser = !this.showAddUser;
     },
@@ -180,7 +177,7 @@ export default {
       })
     },
     editUser(id) {
-      
+
     }
   }
 }
