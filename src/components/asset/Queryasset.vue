@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="">查询</el-button>
+          <el-button type="primary" @click="queryAssetById">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -29,31 +29,31 @@
         label="使用人">
       </el-table-column>
       <el-table-column
-        prop="zcbh"
+        prop="assetNumber"
         label="资产编号">
       </el-table-column>
       <el-table-column
-        prop="gzrq"
+        prop="buyDate"
         label="购置日期">
       </el-table-column>
       <el-table-column
-        prop="dj"
+        prop="price"
         label="单价">
       </el-table-column>
       <el-table-column
-        prop="xh"
+        prop="type"
         label="型号">
       </el-table-column>
       <el-table-column
-        prop="syfx"
+        prop="useDirection"
         label="使用方向">
       </el-table-column>
       <el-table-column
-        prop="ccbh"
+        prop="leaveNumber"
         label="出厂编号">
       </el-table-column>
       <el-table-column
-        prop="cj"
+        prop="brand"
         label="厂家">
       </el-table-column>
     </el-table>
@@ -72,35 +72,68 @@ export default {
       tableData: [{
         assetName: '联想笔记本',
         userName: '张三',
-        zcbh: '23123214124',
-        gzrq: '2017-03-23',
-        dj: '4999',
-        xh: '小新700',
-        syfx: '教学',
-        ccbh: 'DB789787797',
-        cj: '上海联想科技有限公司',
+        assetNumber: '23123214124',
+        buyDate: '2017-03-23',
+        price: '4999',
+        type: '小新700',
+        useDirection: '教学',
+        leaveNumber: 'DB789787797',
+        brand: '上海联想科技有限公司',
       }, {
         assetName: '联想笔记本',
         userName: '张三',
-        zcbh: '23123214124',
-        gzrq: '2017-03-23',
-        dj: '4999',
-        xh: '小新700',
-        syfx: '教学',
-        ccbh: 'DB789787797',
-        cj: '上海联想科技有限公司',
+        assetNumber: '23123214124',
+        buyDate: '2017-03-23',
+        price: '4999',
+        type: '小新700',
+        useDirection: '教学',
+        leaveNumber: 'DB789787797',
+        brand: '上海联想科技有限公司',
       }, {
         assetName: '联想笔记本',
         userName: '张三',
-        zcbh: '23123214124',
-        gzrq: '2017-03-23',
-        dj: '4999',
-        xh: '小新700',
-        syfx: '教学',
-        ccbh: 'DB789787797',
-        cj: '上海联想科技有限公司',
+        assetNumber: '23123214124',
+        buyDate: '2017-03-23',
+        price: '4999',
+        type: '小新700',
+        useDirection: '教学',
+        leaveNumber: 'DB789787797',
+        brand: '上海联想科技有限公司',
       }]
     }
+  },
+  created() {
+    this.queryAssetById()
+  },
+  methods: {
+    formatDate(date) {
+      return date.substring(0, 10)
+    },
+    queryAssetById() {
+      console.log('查询了')
+      this.$http.get('/api/asset/queryAsset')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((asset) => {
+              let item = {
+                id: asset.id,
+                assetName: asset.asset_name,
+                userName: '',
+                assetNumber: asset.asset_number,
+                buyDate: this.formatDate(asset.buy_date),
+                price: asset.asset_price,
+                type: asset.asset_type,
+                useDirection: asset.asset_usedirection,
+                leaveNumber: asset.asset_leavenum,
+                brand: asset.asset_brand
+              }
+              this.tableData.push(item)
+            })
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+    },
   }
 }
 </script>

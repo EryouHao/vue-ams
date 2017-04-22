@@ -40,6 +40,13 @@ router.post('/addAsset', (req, res) => {
 // 查询资产
 router.get('/queryAsset', (req, res) => {
   if (req.session.user !== null) {
+    const id = req.session.user.uid
+    asset_m.queryAssetById(id, (result) => {
+      console.log('查询成功！')
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
   }
 })
 
