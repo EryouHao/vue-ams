@@ -12,16 +12,16 @@
           <el-menu-item index="/callasset" v-if="callasset">资产调用</el-menu-item>
           <el-menu-item index="/user" v-if="isAdmin">用户管理</el-menu-item>
           <el-menu-item index="/personal">个人设置</el-menu-item>
-        </el-menu>  
+        </el-menu>
       </el-col>
       <el-col :span="4">
         <el-menu mode="horizontal">
-          <el-menu-item index="7">EryouHao</el-menu-item>        
+          <el-menu-item index="7">{{ username }}</el-menu-item>
           <el-button class="logout" :plain="true" type="danger" @click="logout">退出系统</el-button>
         </el-menu>
       </el-col>
     </el-row>
-    
+
   </div>
 </template>
 
@@ -32,15 +32,15 @@ export default {
   name: 'hello',
   data () {
     return {
-      username: 'EryouHao',
+      username: JSON.parse(localStorage.user).user_name,
       isAdmin: auth.checkAuth(types.isAdmin),
       addasset: auth.checkAuth(types.addasset),
       callasset: auth.checkAuth(types.callasset)
     }
   },
-  // created() {
-  //   isAdmin = localStorage.getItem('right')
-  // },
+  created() {
+    // isAdmin = localStorage.getItem('right')
+  },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath)

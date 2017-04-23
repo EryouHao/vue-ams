@@ -8,8 +8,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="使用人">
-            <el-input v-model="form.userName"></el-input>
+          <el-form-item label="使用人" props="users">
+            <el-select v-model="form.userId" placeholder="请选择使用人">
+              <el-option v-for="user in users" :label="user.name" :value="user.id"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -179,7 +181,7 @@ export default {
     return {
       form: {
         assetName: '戴尔T430',
-        userName: '郝二优',
+        userId: '',
         assetNumber: 1,
         bill: 'FP001',
         buyDate: '2017-01-01',
@@ -204,9 +206,13 @@ export default {
         imgUrl: '',
         state: 0 // 资产状态，申请中为0
       },
+      users: [], // 使用人列表
       dialogImageUrl: '',
       dialogVisible: false
     };
+  },
+  created() {
+    this.queryUserList()
   },
   methods: {
     show() {
@@ -221,6 +227,23 @@ export default {
     handlePictureCardPreview(file) {
       this.imgUrl = file.url;
       this.dialogVisible = true;
+    },
+    // 填充使用人列表
+    queryUserList() {
+      const self = this
+      this.$http.get('/api/user/queryUserList')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let user = {
+                id: item.id,
+                name: item.user_name
+              }
+              console.log(this.users)
+              this.users.push(user)
+            })
+          }
+        })
     },
     // 测试中文注释
     submit() {

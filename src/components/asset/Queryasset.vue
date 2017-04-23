@@ -114,11 +114,12 @@ export default {
       this.$http.get('/api/asset/queryAsset')
         .then((res) => {
           if (res.status === 200) {
+            console.log(res)
             res.data.forEach((asset) => {
               let item = {
                 id: asset.id,
                 assetName: asset.asset_name,
-                userName: '',
+                userName: asset.user_name,
                 assetNumber: asset.asset_number,
                 buyDate: this.formatDate(asset.buy_date),
                 price: asset.asset_price,

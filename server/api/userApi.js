@@ -133,5 +133,14 @@ router.get('/queryAllUser', (req, res) => {
 	  console.log(jsonWrite(res, result))
   })
 });
+// 查询用户列表，填充使用人接口
+router.get('/queryUserList', (req, res) => {
+  if (req.session.user !== null) {
+    const id = req.session.user.uid
+    user_m.queryUserList(id, (result) => {
+      jsonWrite(res, result)
+    })
+  }
+})
 
 module.exports = router;

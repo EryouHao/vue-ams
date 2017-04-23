@@ -102,6 +102,29 @@ module.exports = {
         connection.release();
       })
     })
+  },
+
+  /**
+   * 使用人列表查询，用作填充下拉框
+   *
+   * @param {*} id 当前登录用户id
+   */
+  queryUserList(id, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      const sql = `
+        select id, user_name
+        from users
+        where right_id = 1
+      `
+      connection.query(sql, id, (err, result) => {
+        if (err) throw err
+
+        cb(result)
+
+        connection.release()
+      })
+    })
   }
 
 }

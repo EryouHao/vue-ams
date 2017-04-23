@@ -22,12 +22,8 @@ var jsonWrite = function(res, ret) {
 
 // 增加资产
 router.post('/addAsset', (req, res) => {
-  console.log(req.body)
   const form = req.body
-  console.log('session是')
-  console.log(req.session.user.uid)
   if (req.session.user !== null) {
-    form.userId = req.session.user.uid
     asset_m.addAsset(form, (result) => {
       console.log('增加资产成功-api')
       jsonWrite(res, result)
