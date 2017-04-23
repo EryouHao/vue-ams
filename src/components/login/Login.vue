@@ -40,17 +40,10 @@ export default {
   },
   methods: {
     login() {
-      console.log(this.form.username)
-      console.log(this.form.password)
       this.$http.post('/api/user/login', {
         username: this.form.username,
         password: this.form.password
       }).then ((res) => {
-        // console.log(res)
-        console.log(res.body)
-        console.log(res.config.data)
-        // console.log(res.code)
-        // console.log(this.$router)
         if (res.status === 200) {
           this.$router.push({ path: '/' })
         }

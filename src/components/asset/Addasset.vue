@@ -1,6 +1,6 @@
 <template>
   <div class="assetadd">
-    <el-form ref="form" :model="form" label-width="120px">
+    <el-form ref="form" :model="form" label-width="120px" enctype="multipart/form-data">
       <el-row>
         <el-col :span="12">
           <el-form-item label="资产名称">
@@ -10,7 +10,7 @@
         <el-col :span="12">
           <el-form-item label="使用人" props="users">
             <el-select v-model="form.userId" placeholder="请选择使用人">
-              <el-option v-for="user in users" :label="user.name" :value="user.id"></el-option>
+              <el-option v-for="(user, index) in users" :key="index" :label="user.name" :value="user.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -87,8 +87,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="存放地点">
-            <el-input v-model="form.storagePlace"></el-input>
+          <el-form-item label="存放地点" props="storagePlaces">
+            <el-select v-model="form.storagePlace" placeholder="请选择存放地点" filterable>
+              <el-option v-for="(sp, index) in storagePlaces" :key="index" :label="sp.name" :value="sp.id"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -153,10 +155,12 @@
         <el-col :span="18">
           <el-form-item label="资产图片">
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              ref="upload"
+              action="http://localhost:3000/api/upload/upload-img"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove">
+              :on-remove="handleRemove"
+              >
               <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog v-model="dialogVisible" size="tiny">
@@ -207,12 +211,14 @@ export default {
         state: 0 // 资产状态，申请中为0
       },
       users: [], // 使用人列表
+      storagePlaces: [],
       dialogImageUrl: '',
       dialogVisible: false
     };
   },
   created() {
     this.queryUserList()
+    this.queryStoragePlace()
   },
   methods: {
     show() {
@@ -225,12 +231,13 @@ export default {
       console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-      this.imgUrl = file.url;
+      console.log(file)
+      this.form.imgUrl = file.url;
       this.dialogVisible = true;
+
     },
     // 填充使用人列表
     queryUserList() {
-      const self = this
       this.$http.get('/api/user/queryUserList')
         .then((res) => {
           if (res.status === 200) {
@@ -239,8 +246,21 @@ export default {
                 id: item.id,
                 name: item.user_name
               }
-              console.log(this.users)
               this.users.push(user)
+            })
+          }
+        })
+    },
+    queryStoragePlace() {
+      this.$http.get('/api/resource/queryStoragePlace')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let place = {
+                id: item.id,
+                name: item.storage_place
+              }
+              this.storagePlaces.push(place)
             })
           }
         })
@@ -254,6 +274,7 @@ export default {
         console.log(this.form.count)
       }
       console.log(this.form)
+      this.$refs.upload.submit() // 上传图片
       this.$http.post('/api/asset/addAsset', this.form)
         .then((res) => {
           if (res.status === 200) {
@@ -282,5 +303,8 @@ export default {
   .assetadd {
     width: 800px;
     margin: 0 auto;
+  }
+  .el-select {
+    width: 100%;
   }
 </style>

@@ -86,5 +86,37 @@ module.exports = {
         connection.release()
       })
     })
+  },
+  // 查询未审核资产
+  queryAssetUncheck: function (cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select *
+        from assets
+        where asset_state=0
+      `
+      conn.query(sql, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+  // 审核
+  check: function (id, state, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        update assets
+        set asset_state = ?
+        where id = ?
+      `
+      conn.query(sql, [state, id], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
   }
 }

@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL COMMENT '使用人',
-  `type_num` varchar(255) DEFAULT NULL COMMENT '信号',
+  `type_num` varchar(255) DEFAULT NULL COMMENT '型号',
   `storage_place` varchar(255) DEFAULT NULL COMMENT '存放地点',
   `asset_id` int(11) DEFAULT NULL COMMENT '设备id',
   PRIMARY KEY (`id`)

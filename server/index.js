@@ -3,6 +3,8 @@
 // 引入编写好的api
 const userApi = require('./api/userApi');
 const assetApi = require('./api/assetApi');
+const resourceApi = require('./api/resourceApi');
+const uploadApi = require('./api/uploadApi');
 
 // 引入文件模块
 const fs = require('fs');
@@ -48,6 +50,8 @@ app.use((req, res, next) => {
 // 后端api路由
 app.use('/api/user', userApi);
 app.use('/api/asset', assetApi);
+app.use('/api/resource', resourceApi);
+app.use('/api/upload', uploadApi);
 
 // 访问静态资源文件，这里是访问所有dist目录下的静态资源文件
 // ...
