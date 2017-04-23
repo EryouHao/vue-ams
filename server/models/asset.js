@@ -118,5 +118,9 @@ module.exports = {
         conn.release()
       })
     })
+  },
+  // 资产调用
+  callAsset: function () {
+
   }
 }

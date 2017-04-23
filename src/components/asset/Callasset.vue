@@ -34,31 +34,31 @@
           label="使用人">
         </el-table-column>
         <el-table-column
-          prop="zcbh"
+          prop="assetNumber"
           label="资产编号">
         </el-table-column>
         <el-table-column
-          prop="gzrq"
+          prop="buyDate"
           label="购置日期">
         </el-table-column>
         <el-table-column
-          prop="dj"
+          prop="price"
           label="单价">
         </el-table-column>
         <el-table-column
-          prop="xh"
+          prop="type"
           label="型号">
         </el-table-column>
         <el-table-column
-          prop="syfx"
+          prop="useDirection"
           label="使用方向">
         </el-table-column>
         <el-table-column
-          prop="ccbh"
+          prop="leaveNumber"
           label="出厂编号">
         </el-table-column>
         <el-table-column
-          prop="cj"
+          prop="brand"
           label="厂家">
         </el-table-column>
       </el-table>
@@ -92,9 +92,11 @@ export default {
         address: '',
       },
       form2: {
-        newUser: '',
-        newAddress: '',
-        reason: '',
+        oldUserId: '',
+        newUserId: '',
+        oldStoragePlace: '',
+        newStoragePlace: '',
+        comment: '',
       },
       tableData: [{
         assetName: '联想笔记本',
@@ -126,12 +128,63 @@ export default {
         syfx: '教学',
         ccbh: 'DB789787797',
         cj: '上海联想科技有限公司',
-      }]
+      }],
+      selectList: []
     }
   },
+  created() {
+    this.queryAssetById()
+  },
   methods: {
+    formatDate(date) {
+      return date.substring(0, 10)
+    },
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.selectList = val;
+      console.log(this.selectList)
+    },
+    queryAssetById() {
+      console.log('查询了')
+      this.$http.get('/api/asset/queryAsset')
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res)
+            res.data.forEach((asset) => {
+              let item = {
+                id: asset.id,
+                assetName: asset.asset_name,
+                userName: asset.user_name,
+                assetNumber: asset.asset_number,
+                bill: asset.asset_bill,
+                buyDate: this.formatDate(asset.buy_date),
+                price: asset.asset_price,
+                type: asset.asset_type,
+                useDirection: asset.asset_usedirection,
+                leaveNumber: asset.asset_leavenum,
+                brand: asset.asset_brand,
+              }
+              this.tableData.push(item)
+            })
+            console.log(this.tableData)
+          }
+          console.log(this.tableData)
+        }).catch((err) => {
+          console.log(err)
+        })
+    },
+    submit() {
+      const form = {
+        selectIdList: this.selectIdList,
+        oldUserId: this.form2.oldUserId,
+        oldStoragePlace: this.form2.oldStoragePlace,
+        newUserId: this.form2.newUserId,
+        newStoragePlace: this.form2.newStoragePlace,
+        comment: this.form2.comment
+      }
+      this.$http.post('/api/asset/call-asset', form)
+        .then((res) => {
+          console.log(res)
+        })
     }
   }
 }
