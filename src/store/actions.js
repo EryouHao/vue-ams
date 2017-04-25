@@ -1,13 +1,12 @@
-import api from '../api'
+// import api from '../api'
 import * as types from './types'
 
+console.log('actions')
+console.log(this.$http)
 export const UserLogin = ({ commit }, data) => {
   console.log('data', data)
-  api.localLogin(data).then(function (response) {
-    console.log('response')
-    console.log(response)
-    console.log(response.data[0].user_state)
-    var user = response.data[0]
+  this.$http.post('/api/user/login', data, (res) => {
+    var user = res.data[0]
     // ...
     if(true) {
       console.log('发送了commit')
@@ -17,29 +16,20 @@ export const UserLogin = ({ commit }, data) => {
       // window.location = '/login'
     }
   })
-  .catch(function (error) {
-    console.log(error);
-  });
 };
 
 export const UserLogout = ({ commit }, data) => {
-  api.localLogout(data).then(function (response) {
+  this.$http.post('/api/logout', data, (res) => {
     commit(types.USER_SIGNOUT);
     window.location = '/login'
   })
-    .catch(function (error) {
-      console.log(error);
-    });
 };
 
 export const UserReg = ({ commit }, data) => {
-  api.localReg(data).then(function (response) {
-    if( response.data.type == true) {
-      commit(types.USER_REG, response.data.token);
+  this.$http.post('/api/reg', data, (res) => {
+    if( res.data.type == true) {
+      commit(types.USER_REG, res.data.token);
       window.location = '/person'
     }
   })
-  .catch(function (error) {
-    console.log(error);
-  });
 };

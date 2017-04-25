@@ -9,7 +9,9 @@ import axios from 'axios'
 import store from './store/index'
 
 Vue.use(ElementUI)
+console.log(Vue.prototype.$http)
 Vue.prototype.$http = axios
+console.log(2)
 
 //设置cookie,增加到vue实例方便全局调用
 //vue全局调用的理由是，有些组件所用到的接口可能需要session验证，session从cookie获取

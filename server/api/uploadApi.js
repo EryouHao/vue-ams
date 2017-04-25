@@ -24,15 +24,13 @@ var jsonWrite = function(res, ret) {
 // 引入上传模块
 const multer = require('multer');
 
+
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, '../uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
+    callback(null, '/uploads');
   }
 });
-const upload = multer({ storage : storage})
+const upload = multer({dest: 'uploads/'})
 
 router.post('/upload-img', upload.single('file'), (err, req, res) => {
   if (err) throw err

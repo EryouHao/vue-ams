@@ -45,6 +45,8 @@ export default {
         password: this.form.password
       }).then ((res) => {
         if (res.status === 200) {
+          console.log(res)
+          localStorage.setItem('user', JSON.stringify(res.data[0]))
           this.$router.push({ path: '/' })
         }
       }).catch((err) => {

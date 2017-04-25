@@ -29,7 +29,6 @@
 import { types, auth } from '../../lib/auth'
 
 export default {
-  name: 'hello',
   data () {
     return {
       username: JSON.parse(localStorage.user).user_name,
@@ -52,6 +51,7 @@ export default {
           console.log('登出了')
           if (res.status === 200) {
             // this.delCookie('hellocookie')
+            localStorage.removeItem('user')
             this.$router.push({ path: '/login' })
           }
         })
