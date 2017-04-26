@@ -25,17 +25,17 @@ var jsonWrite = function(res, ret) {
 const multer = require('multer');
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, '/uploads');
-  }
-});
-const upload = multer({dest: 'uploads/'})
+// const storage = multer.diskStorage({
+//   destination: function (req, file, callback) {
+//     callback(null, '/uploads');
+//   }
+// });
+const upload = multer({dest: 'server/uploads/'})
 
-router.post('/upload-img', upload.single('file'), (err, req, res) => {
-  if (err) throw err
-  console.log('请求进来了')
-  console.log(req.file)
+router.post('/upload-img', upload.single('avatar'), (req, res, next) => {
+	console.log('上传的文件为')
+	console.log(req.file)
+	res.send({'path': req.file.path})
 });
 
 module.exports = router;

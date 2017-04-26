@@ -160,6 +160,8 @@
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
+              :on-success="uploadSuccess"
+              name="avatar"
               >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -236,6 +238,11 @@ export default {
       this.dialogVisible = true;
 
     },
+    uploadSuccess(res, file, fileList) {
+      console.log(res)
+      console.log(file)
+      this.form.imgUrl = file.url
+    },
     // 填充使用人列表
     queryUserList() {
       this.$http.get('/api/user/queryUserList')
@@ -274,7 +281,7 @@ export default {
         console.log(this.form.count)
       }
       console.log(this.form)
-      this.$refs.upload.submit() // 上传图片
+      // this.$refs.upload.submit() // 上传图片
       this.$http.post('/api/asset/addAsset', this.form)
         .then((res) => {
           if (res.status === 200) {

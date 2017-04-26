@@ -47,6 +47,9 @@
               <el-form-item label="使用方向">
                 <span>{{ props.row.useDirection }}</span>
               </el-form-item>
+              <el-form-item label="资产图片">
+                <img :src="props.row.imgUrl" class="asset-img" alt="资产图片">
+              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
@@ -204,6 +207,7 @@ export default {
                 leaveNumber: asset.asset_leavenum,
                 brand: asset.asset_brand,
                 state: this.formatState(asset.asset_state),
+                imgUrl: asset.asset_imgurl,
               }
               this.tableData.push(item)
             })
@@ -267,6 +271,10 @@ export default {
   .page {
     margin: 20px auto 40px;
     text-align: center;
+  }
+  .asset-img {
+    width: 300px;
+    height: 200px;
   }
 </style>
 <style>
