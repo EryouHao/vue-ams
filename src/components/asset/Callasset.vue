@@ -63,20 +63,21 @@
         </el-table-column>
       </el-table>
       <el-form class="form2" ref="form2" :model="form2" label-width="120px">
-        <el-form-item label="新使用人">
-          <el-input v-model="form.assetName"></el-input>
+        <el-form-item label="新使用人" props="users">
+          <el-select v-model="form2.newUserId" placeholder="请选择使用人">
+            <el-option v-for="(user, index) in users" :key="index" :label="user.name" :value="user.id"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="新存放地点">
-          <el-select v-model="form.address" placeholder="存放地点">
-            <el-option label="C1-202" value="shanghai"></el-option>
-            <el-option label="C1-209" value="beijing"></el-option>
+        <el-form-item label="新存放地点" props="storagePlaces">
+          <el-select v-model="form2.newStoragePlace" placeholder="请选择存放地点" filterable>
+            <el-option v-for="(sp, index) in storagePlaces" :key="index" :label="sp.name" :value="sp.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="更改理由备注">
-          <el-input type="textarea" v-model="form2.reason"></el-input>
+          <el-input type="textarea" v-model="form2.comment"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">提交</el-button>
+          <el-button type="primary" @click="submit">提交</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -92,9 +93,9 @@ export default {
         address: '',
       },
       form2: {
-        oldUserId: '',
+        oldUserId: 2,
         newUserId: '',
-        oldStoragePlace: '',
+        oldStoragePlace: 2,
         newStoragePlace: '',
         comment: '',
       },
@@ -129,11 +130,24 @@ export default {
         ccbh: 'DB789787797',
         cj: '上海联想科技有限公司',
       }],
-      selectList: []
+      selectList: [],
+      users: [],
+      storagePlaces: [],
     }
+  },
+  computed: {
+    selectIdList() {
+      let idList = []
+      this.selectList.forEach((asset) => {
+        idList.push(asset.id)
+      })
+      return idList
+    },
   },
   created() {
     this.queryAssetById()
+    this.queryUserList()
+    this.queryStoragePlace()
   },
   methods: {
     formatDate(date) {
@@ -142,6 +156,35 @@ export default {
     handleSelectionChange(val) {
       this.selectList = val;
       console.log(this.selectList)
+    },
+    // 填充使用人列表
+    queryUserList() {
+      this.$http.get('/api/user/queryUserList')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let user = {
+                id: item.id,
+                name: item.user_name
+              }
+              this.users.push(user)
+            })
+          }
+        })
+    },
+    queryStoragePlace() {
+      this.$http.get('/api/resource/queryStoragePlace')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let place = {
+                id: item.id,
+                name: item.storage_place
+              }
+              this.storagePlaces.push(place)
+            })
+          }
+        })
     },
     queryAssetById() {
       console.log('查询了')
@@ -154,6 +197,7 @@ export default {
                 id: asset.id,
                 assetName: asset.asset_name,
                 userName: asset.user_name,
+                userId: asset.user_id,
                 assetNumber: asset.asset_number,
                 bill: asset.asset_bill,
                 buyDate: this.formatDate(asset.buy_date),
@@ -181,6 +225,7 @@ export default {
         newStoragePlace: this.form2.newStoragePlace,
         comment: this.form2.comment
       }
+      console.log(form)
       this.$http.post('/api/asset/call-asset', form)
         .then((res) => {
           console.log(res)

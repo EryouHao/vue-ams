@@ -121,19 +121,17 @@ module.exports = {
     })
   },
   // 资产调用
-  callAsset: function (form, cb) {
+  callAsset: function (id, form, cb) {
     pool.getConnection((err, conn) => {
       if (err) throw err
       const sql = `
-        insert into callassets
-        (asset_id, old_user_id, new_user_id, old_storage_place, new_storage_place, comment)
-        values ?, ?, ?, ?, ?
+        insert into calls
+        (asset_id, new_user_id, new_storage_place, comment)
+        values (?, ?, ?, ?)
       `
       const params = [
-        form.asset_id,
-        form.oldUserId,
+        id,
         form.newUserId,
-        form.oldStoragePlace,
         form.newStoragePlace,
         form.comment
       ]

@@ -3,6 +3,7 @@
 // 引入编写好的api
 const userApi = require('./api/userApi');
 const assetApi = require('./api/assetApi');
+const callApi = require('./api/callApi');
 const resourceApi = require('./api/resourceApi');
 const uploadApi = require('./api/uploadApi');
 
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
 // 后端api路由
 app.use('/api/user', userApi);
 app.use('/api/asset', assetApi);
+app.use('/api/call', callApi);
 app.use('/api/resource', resourceApi);
 app.use('/api/upload', uploadApi);
 

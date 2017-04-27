@@ -5,6 +5,7 @@ import Login from '@/components/login/Login'
 import Addasset from '@/components/asset/Addasset'
 import Queryasset from '@/components/asset/Queryasset'
 import Callasset from '@/components/asset/Callasset'
+import CallassetCheck from '@/components/asset/CallassetCheck'
 import User from '@/components/user/User'
 import Resource from '@/components/resource/Resource'
 import Personal from '@/components/personal/Personal'
@@ -34,6 +35,10 @@ export default new Router({
       {
         path: '/callasset',
         component: Callasset
+      },
+      {
+        path: '/callasset-check',
+        component: CallassetCheck
       },
       {
         path: '/user',
