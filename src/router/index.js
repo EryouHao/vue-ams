@@ -6,6 +6,7 @@ import Addasset from '@/components/asset/Addasset'
 import Queryasset from '@/components/asset/Queryasset'
 import Callasset from '@/components/asset/Callasset'
 import User from '@/components/user/User'
+import Resource from '@/components/resource/Resource'
 import Personal from '@/components/personal/Personal'
 
 Vue.use(Router)
@@ -38,6 +39,10 @@ export default new Router({
         path: '/user',
         component: User,
         // meta: {requiresAuth: true}
+      },
+      {
+        path: '/resource',
+        component: Resource,
       },
       {
         path: '/personal',

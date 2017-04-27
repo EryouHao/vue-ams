@@ -11,13 +11,6 @@ const expressJwt = require('express-jwt');
 var user_m = require('../models/user');
 var bodyParser = require('body-parser').json();
 
-// const auth = expressJwt({secret: 'ams'});
-
-// 连接数据库
-// var conn = mysql.createConnection(models.mysql);
-// var pool = mysql.createPool($util.extend({}, $conf.mysql));
-
-// conn.connect();
 var jsonWrite = function(res, ret) {
 	if(typeof ret === 'undefined') {
 		res.json({

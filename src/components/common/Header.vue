@@ -11,6 +11,7 @@
           <el-menu-item index="/queryasset">资产查询</el-menu-item>
           <el-menu-item index="/callasset" v-if="callasset">资产调用</el-menu-item>
           <el-menu-item index="/user" v-if="isAdmin">用户管理</el-menu-item>
+          <el-menu-item index="/resource" v-if="isAdmin">字典管理</el-menu-item>
           <el-menu-item index="/personal">个人设置</el-menu-item>
         </el-menu>
       </el-col>

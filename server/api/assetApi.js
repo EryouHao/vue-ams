@@ -65,5 +65,17 @@ router.post('/check-asset', (req, res) => {
     console.log('你需要登录才可以操作哦！')
   }
 })
+// 资产调用
+router.post('/call-asset', (req, res) => {
+	const form = req.body
+	if (req.session.user !== null) {
+		asset_m.callAsset(form, (result) => {
+			console.log('资产调用成功-api')
+			jsonWrite(res, result)
+		})
+	} else {
+		console.log('你需要登录才可以操作哦!')
+	}
+})
 
 module.exports = router;

@@ -33,9 +33,9 @@ module.exports = {
           asset_orgid,
           asset_state,
           asset_mark
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-
-      connection.query(sql, [
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `
+      const params = [
         form.assetName,
         form.userId,
         form.assetNumber,
@@ -59,7 +59,8 @@ module.exports = {
         form.orgId,
         form.state,
         form.mark
-        ], (err, results) => {
+      ]
+      connection.query(sql, params, (err, results) => {
           if (err) throw err
 
           cb(results)
@@ -103,7 +104,7 @@ module.exports = {
       })
     })
   },
-  // 审核
+  // 审核资产申报
   check: function (id, state, cb) {
     pool.getConnection((err, conn) => {
       if (err) throw err
@@ -120,7 +121,27 @@ module.exports = {
     })
   },
   // 资产调用
-  callAsset: function () {
-
+  callAsset: function (form, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        insert into callassets
+        (asset_id, old_user_id, new_user_id, old_storage_place, new_storage_place, comment)
+        values ?, ?, ?, ?, ?
+      `
+      const params = [
+        form.asset_id,
+        form.oldUserId,
+        form.newUserId,
+        form.oldStoragePlace,
+        form.newStoragePlace,
+        form.comment
+      ]
+      conn.query(sql, params, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
   }
 }
