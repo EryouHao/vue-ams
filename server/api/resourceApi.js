@@ -23,23 +23,18 @@ var jsonWrite = function(res, ret) {
 // 查询存放地点
 router.get('/queryStoragePlace', (req, res) => {
   resource_m.queryStoragePlace((result) => {
-    console.log('查询存放地点成功')
-    console.log(result)
     jsonWrite(res, result)
   })
 })
 
-// 查询资产
-router.get('/queryAsset', (req, res) => {
-  if (req.session.user !== null) {
-    const id = req.session.user.uid
-    asset_m.queryAssetById(id, (result) => {
-      console.log('查询成功！')
-      jsonWrite(res, result)
-    })
-  } else {
-    console.log('你需要登录才可以操作哦！')
-  }
+// 通过 id 查询字典名
+router.get('/query-resource-by-id', (req, res) => {
+	let params = req.body
+	if (req.session.user !== null) {
+		resource_m.queryResourceById(params.id, (result) => {
+			jsonWrite(res, result)
+		})
+	}
 })
 
 module.exports = router;

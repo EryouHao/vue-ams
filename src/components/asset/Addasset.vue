@@ -265,7 +265,7 @@ export default {
             res.data.forEach((item) => {
               let place = {
                 id: item.id,
-                name: item.storage_place
+                name: item.name
               }
               this.storagePlaces.push(place)
             })

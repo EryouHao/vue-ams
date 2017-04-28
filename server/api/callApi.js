@@ -27,7 +27,19 @@ router.get('/query-call-list', (req, res) => {
     call_m.queryCallList((result) => {
       console.log('查询成功！')
       jsonWrite(res, result)
-      console.log(res)
+      // console.log(res)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
+})
+
+// 审核资产
+router.post('/check-call', (req, res) => {
+  const params = req.body
+  if (req.session.user !== null) {
+    call_m.check(params.id, params.state, (result) => {
+      jsonWrite(res, result)
     })
   } else {
     console.log('你需要登录才可以操作哦！')

@@ -125,6 +125,25 @@ module.exports = {
         connection.release()
       })
     })
+  },
+
+  // 通过id查询用户
+  queryUserById(id, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select user_name
+        from users
+        where id = ?
+      `
+      console.log('执行了查询数据操作')
+      console.log(sql, id)
+      conn.query(sql, id, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
   }
 
 }

@@ -12,19 +12,19 @@
                 <span>{{ props.row.assetName }}</span>
               </el-form-item>
               <el-form-item label="原使用人">
-                <span>{{ props.row.userName }}</span>
+                <span>{{ props.row.oldUserName }}</span>
               </el-form-item>
               <el-form-item label="新使用人">
-                <span>{{ props.row.assetNumber }}</span>
+                <span>{{ props.row.newUserName }}</span>
               </el-form-item>
               <el-form-item label="原存放地点">
-                <span>{{ props.row.bill }}</span>
+                <span>{{ props.row.oldStoragePlace }}</span>
               </el-form-item>
               <el-form-item label="新存放地点">
-                <span>{{ props.row.buyDate }}</span>
+                <span>{{ props.row.newUserName }}</span>
               </el-form-item>
               <el-form-item label="备注">
-                <span>{{ props.row.buyDate }}</span>
+                <span>{{ props.row.comment }}</span>
               </el-form-item>
             </el-form>
           </template>
@@ -34,19 +34,19 @@
           label="资产名称">
         </el-table-column>
         <el-table-column
-          prop="userName"
+          prop="oldUserName"
           label="原使用人">
         </el-table-column>
         <el-table-column
-          prop="assetNumber"
+          prop="newUserName"
           label="新使用人">
         </el-table-column>
         <el-table-column
-          prop="buyDate"
+          prop="oldStoragePlace"
           label="原存放地点">
         </el-table-column>
         <el-table-column
-          prop="price"
+          prop="newStoragePlace"
           label="新存放地点">
         </el-table-column>
         <el-table-column
@@ -59,7 +59,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="check(id.row.id,2)">不通过</el-button>
+              @click="check(id.row.id, 2)">不通过</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,18 +84,6 @@ export default {
       tableData: []
     }
   },
-  computed: {
-    right() {
-      const rightId = JSON.parse(localStorage.user).right_id
-      if (rightId === 0) {
-        return 'ADMIN' // 管理员
-      } else if (rightId === 1) {
-        return 'TEACHER' // 老师
-      } else {
-        return '' // 实验室
-      }
-    }
-  },
   created() {
     this.queryCallList()
   },
@@ -117,25 +105,21 @@ export default {
       this.$http.get('/api/call/query-call-list')
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
-            // res.data.forEach((asset) => {
-            //   let item = {
-            //     id: asset.id,
-            //     assetName: asset.asset_name,
-            //     userName: asset.user_name,
-            //     assetNumber: asset.asset_number,
-            //     bill: asset.asset_bill,
-            //     buyDate: this.formatDate(asset.buy_date),
-            //     price: asset.asset_price,
-            //     type: asset.asset_type,
-            //     useDirection: asset.asset_usedirection,
-            //     leaveNumber: asset.asset_leavenum,
-            //     brand: asset.asset_brand,
-            //     state: this.formatState(asset.asset_state),
-            //     imgUrl: asset.asset_imgurl,
-            //   }
-            //   this.tableData.push(item)
-            // })
+            console.log('返回的数据是')
+            console.log(res.data)
+
+            res.data.forEach((item) => {
+              let tableItem = {
+                assetName: item.asset_name,
+                oldUserName: item.old_user,
+                newUserName: item.new_user,
+                oldStoragePlace: item.old_place,
+                newStoragePlace: item.new_place,
+                comment: item.comment,
+              }
+              console.log(tableItem)
+              this.tableData.push(tableItem)
+            })
           }
         }).catch((err) => {
           console.log(err)
@@ -170,7 +154,7 @@ export default {
         })
     },
     check(id, state) {
-      this.$http.post('/api/asset/check-asset', {id: id,state: state})
+      this.$http.post('/api/asset/check-asset', {id: id, state: state})
         .then((res) => {
           if (res.status === 200) {
             this.$message({

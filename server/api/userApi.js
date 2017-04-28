@@ -135,5 +135,16 @@ router.get('/queryUserList', (req, res) => {
     })
   }
 })
+// 通过 id 查询用户
+router.post('/query-user-by-id', (req, res) => {
+	let params = req.body
+	if (req.session.user !== null) {
+		console.log('执行了通过ｉｄ查询用户')
+		console.log(params)
+		user_m.queryUserById(params.id, (result) => {
+			jsonWrite(res, result)
+		})
+	}
+})
 
 module.exports = router;

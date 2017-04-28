@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-04-27 13:02:05
+Date: 2017-04-28 20:34:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -34,6 +34,7 @@ CREATE TABLE `assets` (
   `asset_usedirection` varchar(255) DEFAULT NULL COMMENT '使用方向',
   `asset_leavenum` varchar(255) DEFAULT NULL COMMENT '出厂编号',
   `asset_brand` varchar(255) DEFAULT NULL COMMENT '厂家',
+  `asset_storageplace` int(11) DEFAULT NULL COMMENT '存放地点',
   `asset_organization` varchar(255) DEFAULT NULL COMMENT '申购单位',
   `asset_purchaser` varchar(255) DEFAULT NULL COMMENT '购买人',
   `asset_attachnum` int(11) DEFAULT NULL COMMENT '附件数',
@@ -48,18 +49,34 @@ CREATE TABLE `assets` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for callassets
+-- Records of assets
 -- ----------------------------
-DROP TABLE IF EXISTS `callassets`;
-CREATE TABLE `callassets` (
+INSERT INTO `assets` VALUES ('1', '戴尔T430', '3', '1', 'FP001', '2017-01-01 00:00:00', '4999', 'T430', 'GG001', '2017-01-31 00:00:00', '2017-03-14 00:00:00', '实验教学', 'CC001', '戴尔公司', '1', '1', '', '10', '2.3', '2', '', '', '2', '1', '');
+INSERT INTO `assets` VALUES ('2', '戴尔T420', '2', '002', 'FP002', '2017-04-19 00:00:00', '4999', 'T420', 'GG002', '2017-04-26 00:00:00', '2017-01-26 00:00:00', '实验教学', 'CC002', '戴尔公司', '1', '1', '张芳', '10', '2.3', '2', '院长', '', '1', '0', '备注内容');
+INSERT INTO `assets` VALUES ('3', '戴尔T430', '2', '1', 'FP001', '2017-01-01 00:00:00', '4999', '', '', '2017-01-01 00:00:00', '2017-01-01 00:00:00', '', '', '', '3', '', '', '10', '2.3', '3', '', '', '1', '0', '');
+INSERT INTO `assets` VALUES ('4', '戴尔T430', '3', '1', 'FP001', '2017-01-01 00:00:00', '4999', '', '', '2017-01-01 00:00:00', '2017-01-01 00:00:00', '', '', '', '3', '', '', '10', '2.3', '3', '', 'blob:http://localhost:8080/26764520-e6e2-4fa8-98be-0d0b621f04b2', '1', '0', '');
+INSERT INTO `assets` VALUES ('5', '戴尔T440', '2', '004', 'FP004', '2017-01-03 00:00:00', '4999', 'T440', 'GG004', '2017-01-28 00:00:00', '2017-01-31 00:00:00', '实验教学', 'CC004', '戴尔公司', '2', '1', '张芳', '10', '2.3', '1', '张芳,李四', 'blob:http://localhost:8080/23133ef3-2751-4a24-8a43-62c03b3127e3', '1', '1', '备注内容');
+
+-- ----------------------------
+-- Table structure for calls
+-- ----------------------------
+DROP TABLE IF EXISTS `calls`;
+CREATE TABLE `calls` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `asset_id` int(11) DEFAULT NULL COMMENT '资产id',
-  `old_user_id` int(11) DEFAULT NULL COMMENT '旧使用人',
   `new_user_id` int(11) DEFAULT NULL COMMENT '新使用人',
-  `old_storage_place` varchar(255) DEFAULT NULL COMMENT '旧存放地点',
-  `new_storage_place` varchar(255) DEFAULT NULL COMMENT '新存放地点',
+  `new_storage_place_id` varchar(255) DEFAULT NULL COMMENT '新存放地点',
+  `comment` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of calls
+-- ----------------------------
+INSERT INTO `calls` VALUES ('1', '4', '3', '3', '申请调用，请求通过！');
+INSERT INTO `calls` VALUES ('2', '5', '3', '3', '申请调用，请求通过！');
+INSERT INTO `calls` VALUES ('3', '4', '3', '2', '申请备注');
+INSERT INTO `calls` VALUES ('4', '5', '3', '2', '申请备注');
 
 -- ----------------------------
 -- Table structure for resource
@@ -68,9 +85,16 @@ DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) DEFAULT NULL COMMENT '字典类型',
-  `storage_place` varchar(255) DEFAULT NULL COMMENT '存放地点',
+  `name` varchar(255) DEFAULT NULL COMMENT '存放地点',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of resource
+-- ----------------------------
+INSERT INTO `resource` VALUES ('1', 'storage_place', 'C1-101');
+INSERT INTO `resource` VALUES ('2', 'storage_place', 'C1-102');
+INSERT INTO `resource` VALUES ('3', 'storage_place', 'C1-103');
 
 -- ----------------------------
 -- Table structure for users
@@ -85,4 +109,11 @@ CREATE TABLE `users` (
   `right_id` int(11) DEFAULT NULL COMMENT '权限id',
   `user_mobile` varchar(11) DEFAULT NULL COMMENT '联系方式',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES ('1', 'fehey', '164faae15f5a4433518bc899f7d911177dc986c1', null, null, '0', null);
+INSERT INTO `users` VALUES ('2', 'zhangfang', '59bb8e88c24f43aabeb505e92f5d1b244bffd04e', 'zhangfang@qq.com', '0', '1', '15733296572');
+INSERT INTO `users` VALUES ('3', 'lisi', '59bb8e88c24f43aabeb505e92f5d1b244bffd04e', 'lisi@qq.com', '0', '1', '15733296574');
