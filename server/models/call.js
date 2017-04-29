@@ -15,7 +15,6 @@ module.exports = {
       `
       conn.query(sql, (err, result) => {
         if (err) throw err
-        console.log(result)
         cb(result)
         conn.release()
       })
@@ -25,15 +24,30 @@ module.exports = {
   check: function (id, state, cb) {
     pool.getConnection((err, conn) => {
       if (err) throw err
+      let sql = ''
       if (state === 'PASS') {
-        const sql = `
+        sql = `
+          UPDATE assets
+          INNER JOIN calls ON assets.id = (
+            SELECT
+              asset_id
+            FROM
+              calls
+            WHERE
+              id = ?
+          )
+          SET assets.user_id = calls.new_user_id,
+          assets.asset_storageplace = calls.new_storage_place_id
         `
       } else {
-        const sql = ``
+        sql = `
+          delete from calls where id = ?
+        `
       }
-
-      conn.query(sql, [state, id], (err, result) => {
+      console.log(sql)
+      conn.query(sql, id, (err, result) => {
         if (err) throw err
+        console.log(result)
         cb(result)
         conn.release()
       })

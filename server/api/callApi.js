@@ -34,9 +34,11 @@ router.get('/query-call-list', (req, res) => {
   }
 })
 
-// 审核资产
+// 审核资产调用
 router.post('/check-call', (req, res) => {
   const params = req.body
+  console.log('执行了submitapi')
+  console.log(params)
   if (req.session.user !== null) {
     call_m.check(params.id, params.state, (result) => {
       jsonWrite(res, result)

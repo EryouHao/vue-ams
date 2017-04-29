@@ -55,11 +55,11 @@
           <template scope="id">
             <el-button
               size="mini"
-              @click="check(id.row.id, 1)">通过</el-button>
+              @click="check(id.row.id, 'PASS')">通过</el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="check(id.row.id, 2)">不通过</el-button>
+              @click="check(id.row.id, 'REJECT')">不通过</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -116,6 +116,7 @@ export default {
                 oldStoragePlace: item.old_place,
                 newStoragePlace: item.new_place,
                 comment: item.comment,
+                id: item.id
               }
               console.log(tableItem)
               this.tableData.push(tableItem)
@@ -125,46 +126,19 @@ export default {
           console.log(err)
         })
     },
-    queryAssetUncheck() {
-      console.log('查询了')
-      this.$http.get('/api/asset/query-asset-uncheck')
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res)
-            res.data.forEach((asset) => {
-              let item = {
-                id: asset.id,
-                assetName: asset.asset_name,
-                userName: asset.user_name,
-                assetNumber: asset.asset_number,
-                bill: asset.asset_bill,
-                buyDate: this.formatDate(asset.buy_date),
-                price: asset.asset_price,
-                type: asset.asset_type,
-                useDirection: asset.asset_usedirection,
-                leaveNumber: asset.asset_leavenum,
-                brand: asset.asset_brand,
-                state: this.formatState(asset.asset_state),
-              }
-              this.tableData.push(item)
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-    },
     check(id, state) {
-      this.$http.post('/api/asset/check-asset', {id: id, state: state})
+      console.log(id, state)
+      this.$http.post('/api/call/check-call', {id: id, state: state})
         .then((res) => {
           if (res.status === 200) {
             this.$message({
               type: 'success',
-              message: '通过操作成功'
+              message: '同意调用'
             })
           } else {
             this.$message({
               type: 'danger',
-              message: '操作失败'
+              message: '拒绝'
             })
           }
         })
