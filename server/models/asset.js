@@ -88,6 +88,23 @@ module.exports = {
       })
     })
   },
+  // 查询已审核的的所有资产
+  queryAllAsset: function (cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select a.*, u.user_name
+        from assets a, users u
+        where a.asset_state = 1 and a.user_id = u.id
+      `
+      conn.query(sql, (err, result) => {
+        if (err) throw err
+        console.log(result)
+        cb(result)
+        conn.release()
+      })
+    })
+  },
   // 查询未审核资产
   queryAssetUncheck: function (cb) {
     pool.getConnection((err, conn) => {

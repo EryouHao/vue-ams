@@ -4,6 +4,7 @@ import Index from '@/components/index/Index'
 import Login from '@/components/login/Login'
 import Addasset from '@/components/asset/Addasset'
 import Queryasset from '@/components/asset/Queryasset'
+import QueryAllAsset from '@/components/asset/QueryAllAsset'
 import Callasset from '@/components/asset/Callasset'
 import CallassetCheck from '@/components/asset/CallassetCheck'
 import User from '@/components/user/User'
@@ -31,6 +32,10 @@ export default new Router({
       {
         path: '/queryasset',
         component: Queryasset
+      },
+      {
+        path: '/query-all-asset',
+        component: QueryAllAsset
       },
       {
         path: '/callasset',

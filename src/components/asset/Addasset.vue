@@ -282,7 +282,7 @@ export default {
       }
       console.log(this.form)
       // this.$refs.upload.submit() // 上传图片
-      this.$http.post('/api/asset/addAsset', this.form)
+      this.$http.post('/api/asset/add', this.form)
         .then((res) => {
           if (res.status === 200) {
             this.$message({

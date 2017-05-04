@@ -21,7 +21,7 @@ var jsonWrite = function(res, ret) {
 };
 
 // 增加资产
-router.post('/addAsset', (req, res) => {
+router.post('/add', (req, res) => {
   const form = req.body
   if (req.session.user !== null) {
     asset_m.addAsset(form, (result) => {
@@ -33,8 +33,17 @@ router.post('/addAsset', (req, res) => {
   }
 })
 
+// 查询所有通过审核的资产
+router.get('/query-all-asset', (req, res) => {
+	if (req.session.user) {
+		asset_m.queryAllAsset((result) => {
+			jsonWrite(res, result)
+		})
+	}
+})
+
 // 查询资产
-router.get('/queryAsset', (req, res) => {
+router.get('/query-asset-by-id', (req, res) => {
   if (req.session.user !== null) {
     const id = req.session.user.uid
     asset_m.queryAssetById(id, (result) => {

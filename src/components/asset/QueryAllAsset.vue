@@ -12,9 +12,10 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="queryAssetById">查询</el-button>
+          <el-button type="primary">查询</el-button>
         </el-form-item>
       </el-form>
+      <el-button type="primary" @click="exportExcel">导出Excel</el-button>
     </div>
     <div class="result-content">
       <el-table
@@ -80,25 +81,6 @@
         <el-table-column
           prop="useDirection"
           label="使用方向">
-        </el-table-column>
-        <el-table-column
-          v-if="right === 'TEACHER'"
-          prop="state"
-          label="状态">
-        </el-table-column>
-        <el-table-column
-          v-if="right === 'ADMIN'"
-          prop="id"
-          label="操作">
-          <template scope="id">
-            <el-button
-              size="mini"
-              @click="check(id.row.id, 1)">通过</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="check(id.row.id,2)">不通过</el-button>
-          </template>
         </el-table-column>
       </el-table>
       <div class="page">
@@ -168,11 +150,7 @@ export default {
     }
   },
   created() {
-    if (this.right === 'TEACHER') {
-      this.queryAssetById()
-    } else if (this.right === 'ADMIN') {
-      this.queryAssetUncheck()
-    }
+    // this.queryAllAsset()
   },
   methods: {
     formatDate(date) {
@@ -187,9 +165,9 @@ export default {
         return '未通过'
       }
     },
-    queryAssetById() {
+    queryAllAsset() {
       console.log('查询了')
-      this.$http.get('/api/asset/query-asset-by-id')
+      this.$http.get('/api/asset/query-all-asset')
         .then((res) => {
           if (res.status === 200) {
             console.log(res)
@@ -216,50 +194,16 @@ export default {
           console.log(err)
         })
     },
-    queryAssetUncheck() {
-      console.log('查询了')
-      this.$http.get('/api/asset/query-asset-uncheck')
+    // 导出Excel
+    exportExcel() {
+      this.$http.get('/api/export/export-excel')
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
-            res.data.forEach((asset) => {
-              let item = {
-                id: asset.id,
-                assetName: asset.asset_name,
-                userName: asset.user_name,
-                assetNumber: asset.asset_number,
-                bill: asset.asset_bill,
-                buyDate: this.formatDate(asset.buy_date),
-                price: asset.asset_price,
-                type: asset.asset_type,
-                useDirection: asset.asset_usedirection,
-                leaveNumber: asset.asset_leavenum,
-                brand: asset.asset_brand,
-                state: this.formatState(asset.asset_state),
-              }
-              this.tableData.push(item)
-            })
+            console.log('ｄａｏｃｈｕ')
+            window.location = 'http://localhost:8090/api/export/export-excel'
           }
-        }).catch((err) => {
-          console.log(err)
         })
     },
-    check(id, state) {
-      this.$http.post('/api/asset/check-asset', {id: id,state: state})
-        .then((res) => {
-          if (res.status === 200) {
-            this.$message({
-              type: 'success',
-              message: '通过操作成功'
-            })
-          } else {
-            this.$message({
-              type: 'danger',
-              message: '操作失败'
-            })
-          }
-        })
-    }
   }
 }
 </script>

@@ -6,6 +6,7 @@ const assetApi = require('./api/assetApi');
 const callApi = require('./api/callApi');
 const resourceApi = require('./api/resourceApi');
 const uploadApi = require('./api/uploadApi');
+const exportApi = require('./api/exportApi');
 
 // 引入文件模块
 const fs = require('fs');
@@ -57,10 +58,11 @@ app.use('/api/asset', assetApi);
 app.use('/api/call', callApi);
 app.use('/api/resource', resourceApi);
 app.use('/api/upload', uploadApi);
+app.use('/api/export', exportApi);
 
 // 访问静态资源文件，这里是访问所有dist目录下的静态资源文件
 // ...
 
 // 监听3000端口
-app.listen(3000);
+app.listen(4001);
 console.log('success listen......');
