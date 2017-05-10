@@ -48,7 +48,7 @@
                 <span>{{ props.row.useDirection }}</span>
               </el-form-item>
               <el-form-item label="资产图片">
-                <img :src="props.row.imgUrl" class="asset-img" alt="资产图片">
+                <img src="static/images/mac.png" class="asset-img" alt="资产图片">
               </el-form-item>
             </el-form>
           </template>

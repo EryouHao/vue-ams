@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="16">
         <el-menu :router="true" :default-active="this.$router.currentRoute.path" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="/">首页</el-menu-item>
+          <el-menu-item index="/dashboard">首页</el-menu-item>
           <el-menu-item index="/query-all-asset">资产总览</el-menu-item>
           <el-menu-item index="/queryasset" v-if="isAdmin">申报审核</el-menu-item>
           <el-menu-item index="/queryasset" v-if="!isAdmin">资产查询</el-menu-item>

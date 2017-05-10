@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/index/Index'
+import Dashboard from '@/components/dashboard/Dashboard'
 import Login from '@/components/login/Login'
 import Addasset from '@/components/asset/Addasset'
 import Queryasset from '@/components/asset/Queryasset'
@@ -25,47 +26,52 @@ export default new Router({
     {
       path: '/',
       component: Index,
-      children: [{
-        path: '/addasset',
-        component: Addasset
+      children: [
+        {
+          path: '/dashboard',
+          component: Dashboard
+        },
+        {
+          path: '/addasset',
+          component: Addasset
+        },
+        {
+          path: '/queryasset',
+          component: Queryasset
+        },
+        {
+          path: '/query-all-asset',
+          component: QueryAllAsset
+        },
+        {
+          path: '/callasset',
+          component: Callasset
+        },
+        {
+          path: '/callasset-check',
+          component: CallassetCheck
+        },
+        {
+          path: '/user',
+          component: User,
+          // meta: {requiresAuth: true}
+        },
+        {
+          path: '/resource',
+          component: Resource,
+        },
+        {
+          path: '/personal',
+          component: Personal
+        },]
       },
       {
-        path: '/queryasset',
-        component: Queryasset
+        path: '/login',
+        component: Login
       },
       {
-        path: '/query-all-asset',
-        component: QueryAllAsset
-      },
-      {
-        path: '/callasset',
-        component: Callasset
-      },
-      {
-        path: '/callasset-check',
-        component: CallassetCheck
-      },
-      {
-        path: '/user',
-        component: User,
-        // meta: {requiresAuth: true}
-      },
-      {
-        path: '/resource',
-        component: Resource,
-      },
-      {
-        path: '/personal',
-        component: Personal
-      },]
-    },
-    {
-      path: '/login',
-      component: Login
-    },
-    {
-      path: '/*',
-      redirect: '/login'
-    }
-  ]
+        path: '/*',
+        redirect: '/login'
+      }
+    ]
 })
