@@ -96,10 +96,9 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="申购单位">
-            <el-select v-model="form.organization" placeholder="请选择申购单位">
-              <el-option label="单位一" value="1"></el-option>
-              <el-option label="单位二" value="2"></el-option>
+          <el-form-item label="申购单位" props="buyers">
+            <el-select v-model="form.buyer" placeholder="请选择申购单位">
+              <el-option v-for="(buyer, index) in buyers" :key="index" :label="buyer.name" :value="buyer.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -111,36 +110,39 @@
       </el-row>
       <el-row>
         <el-col :span="12">
+          <el-form-item label="附件数">
+            <el-input v-model="form.attachNum"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="附件金额">
             <el-input v-model="form.attachAmount"></el-input>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
-          <el-form-item label="经费来源">
+          <el-form-item label="经费来源" props="funds">
             <el-select v-model="form.fundId" placeholder="请选择经费来源">
-              <el-option label="来源一" value="1"></el-option>
-              <el-option label="来源二" value="2"></el-option>
+              <el-option v-for="(fund, index) in funds" :key="index" :label="fund.name" :value="fund.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="12">
           <el-form-item label="经办人签名">
             <el-input v-model="form.signature"></el-input>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
-          <el-form-item label="采购组织形式">
+          <el-form-item label="采购组织形式" props="organization">
             <el-select v-model="form.orgId" placeholder="请选择采购组织形式">
-              <el-option label="形式一" value="1"></el-option>
-              <el-option label="形式二" value="2"></el-option>
+              <el-option v-for="(org, index) in organization" :key="index" :label="org.name" :value="org.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="备注">
             <el-input v-model="form.mark"></el-input>
           </el-form-item>
@@ -156,7 +158,7 @@
           <el-form-item label="资产图片">
             <el-upload
               ref="upload"
-              action="http://localhost:3000/api/upload/upload-img"
+              action="http://localhost:4001/api/upload/upload-img"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
@@ -188,25 +190,25 @@ export default {
       form: {
         assetName: '戴尔T430',
         userId: '',
-        assetNumber: 1,
-        bill: 'FP001',
-        buyDate: '2017-01-01',
-        price: 4999,
+        assetNumber: '',
+        bill: '',
+        buyDate: '',
+        price: '',
         type: '',
         standard: '',
-        leaveDate: '2017-01-01',
-        submitDate: '2017-01-01',
+        leaveDate: '',
+        submitDate: '',
         useDirection: '',
         leaveNum: '',
         brand: '',
         storagePlace: '',
-        organization: '',
+        buyer: '',
         purchaser: '',
-        attachNum: 10,
-        attachAmount: 2.3,
+        attachNum: '',
+        attachAmount: '',
         signature: '',
-        fundId: 3,
-        orgId: 1,
+        fundId: '',
+        orgId: '',
         mark: '',
         count: '',
         imgUrl: '',
@@ -214,6 +216,9 @@ export default {
       },
       users: [], // 使用人列表
       storagePlaces: [],
+      funds: [],
+      organization: [],
+      buyers: [],
       dialogImageUrl: '',
       dialogVisible: false
     };
@@ -221,6 +226,9 @@ export default {
   created() {
     this.queryUserList()
     this.queryStoragePlace()
+    this.queryFunds()
+    this.queryOrganization()
+    this.queryBuyer()
   },
   methods: {
     show() {
@@ -234,14 +242,15 @@ export default {
     },
     handlePictureCardPreview(file) {
       console.log(file)
-      this.form.imgUrl = file.url;
+      // this.form.imgUrl = file.url;
       this.dialogVisible = true;
 
     },
     uploadSuccess(res, file, fileList) {
       console.log(res)
+      console.log('file对象为')
       console.log(file)
-      this.form.imgUrl = file.url
+      this.form.imgUrl = res.path
     },
     // 填充使用人列表
     queryUserList() {
@@ -263,11 +272,53 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             res.data.forEach((item) => {
-              let place = {
+              let obj = {
                 id: item.id,
                 name: item.name
               }
-              this.storagePlaces.push(place)
+              this.storagePlaces.push(obj)
+            })
+          }
+        })
+    },
+    queryFunds() {
+      this.$http.get('/api/resource/query-funds')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let obj = {
+                id: item.id,
+                name: item.name
+              }
+              this.funds.push(obj)
+            })
+          }
+        })
+    },
+    queryOrganization() {
+      this.$http.get('/api/resource/query-organization')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let obj = {
+                id: item.id,
+                name: item.name
+              }
+              this.organization.push(obj)
+            })
+          }
+        })
+    },
+    queryBuyer() {
+      this.$http.get('/api/resource/query-buyer')
+        .then((res) => {
+          if (res.status === 200) {
+            res.data.forEach((item) => {
+              let obj = {
+                id: item.id,
+                name: item.name
+              }
+              this.buyers.push(obj)
             })
           }
         })

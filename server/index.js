@@ -7,6 +7,7 @@ const callApi = require('./api/callApi');
 const resourceApi = require('./api/resourceApi');
 const uploadApi = require('./api/uploadApi');
 const exportApi = require('./api/exportApi');
+const importApi = require('./api/importApi');
 
 // 引入文件模块
 const fs = require('fs');
@@ -26,8 +27,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // 静态文件目录
-app.use('/static', express.static(__dirname + 'public'));
-
+// app.use('/static', express.static(__dirname + 'public'));
+app.use(express.static('public'));
 app.use(session({
   secret: 'fehey',
   cookie: { maxAge: 60*60*1000 },
@@ -44,11 +45,9 @@ app.use((req, res, next) => {
       username: req.session.user.username,
       userright: req.session.user.userright
     }
-    console.log('执行了')
   } else {
     res.locals.user = {};
   }
-  console.log('res.locals:' + res.locals.user.userright);
   next();
 })
 
@@ -59,6 +58,7 @@ app.use('/api/call', callApi);
 app.use('/api/resource', resourceApi);
 app.use('/api/upload', uploadApi);
 app.use('/api/export', exportApi);
+app.use('/api/import', importApi);
 
 // 访问静态资源文件，这里是访问所有dist目录下的静态资源文件
 // ...

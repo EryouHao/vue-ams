@@ -23,7 +23,8 @@ module.exports = {
           asset_usedirection,
           asset_leavenum,
           asset_brand,
-          asset_organization,
+          asset_storageplace,
+          asset_buyer,
           asset_purchaser,
           asset_attachnum,
           asset_attachamount,
@@ -33,7 +34,7 @@ module.exports = {
           asset_orgid,
           asset_state,
           asset_mark
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `
       const params = [
         form.assetName,
@@ -49,7 +50,8 @@ module.exports = {
         form.useDirection,
         form.leaveNum,
         form.brand,
-        form.organization,
+        form.storagePlace,
+        form.buyer,
         form.purchaser,
         form.attachNum,
         form.attachAmount,

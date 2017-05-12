@@ -48,7 +48,7 @@
                 <span>{{ props.row.useDirection }}</span>
               </el-form-item>
               <el-form-item label="资产图片">
-                <img src="static/images/mac.png" class="asset-img" alt="资产图片">
+                <img src="http://localhost:4001/server/uploads/avatar-1494579693303.jpeg" class="asset-img" alt="资产图片">
               </el-form-item>
             </el-form>
           </template>
@@ -119,40 +119,7 @@ export default {
         assetName: '',
         address: '',
       },
-      tableData: [{
-        assetName: '联想笔记本',
-        userName: '张三',
-        assetNumber: '23123214124',
-        buyDate: '2017-03-23',
-        price: '4999',
-        type: '小新700',
-        useDirection: '教学',
-        leaveNumber: 'DB789787797',
-        brand: '上海联想科技有限公司',
-        state: 0,
-      }, {
-        assetName: '联想笔记本',
-        userName: '张三',
-        assetNumber: '23123214124',
-        buyDate: '2017-03-23',
-        price: '4999',
-        type: '小新700',
-        useDirection: '教学',
-        leaveNumber: 'DB789787797',
-        brand: '上海联想科技有限公司',
-        state: 0,
-      }, {
-        assetName: '联想笔记本',
-        userName: '张三',
-        assetNumber: '23123214124',
-        buyDate: '2017-03-23',
-        price: '4999',
-        type: '小新700',
-        useDirection: '教学',
-        leaveNumber: 'DB789787797',
-        brand: '上海联想科技有限公司',
-        state: 1,
-      }]
+      tableData: []
     }
   },
   computed: {

@@ -27,6 +27,27 @@ router.get('/queryStoragePlace', (req, res) => {
   })
 })
 
+// 查询经费来源
+router.get('/query-funds', (req, res) => {
+  resource_m.queryFunds((result) => {
+    jsonWrite(res, result)
+  })
+})
+
+// 查询经费来源
+router.get('/query-organization', (req, res) => {
+  resource_m.queryOrganization((result) => {
+    jsonWrite(res, result)
+  })
+})
+
+// 查询申购单位
+router.get('/query-buyer', (req, res) => {
+  resource_m.queryBuyer((result) => {
+    jsonWrite(res, result)
+  })
+})
+
 // 通过 id 查询字典名
 router.get('/query-resource-by-id', (req, res) => {
 	let params = req.body

@@ -16,54 +16,32 @@
 </template>
 
 <script>
-// import api from '../axios'
-import { mapGetters, mapActions } from 'vuex'
-
-export default {
-  data () {
-    return {
-      form: {
-        username: '',
-        password: ''
-      }
-    };
-  },
-  computed: {
-    ...mapGetters({
-      // getCount return value 将会存在别名为 count 的data 上
-      name: 'getName',
-      right: 'getRight'
-    }),
-    ...mapActions({
-      UserLogin: 'UserLogin',
-    })
-  },
-  methods: {
-    login() {
-      this.$http.post('/api/user/login', {
-        username: this.form.username,
-        password: this.form.password
-      }).then ((res) => {
-        if (res.status === 200) {
-          console.log(res)
-          localStorage.setItem('user', JSON.stringify(res.data[0]))
-          this.$router.push({ path: '/' })
+  export default {
+    data () {
+      return {
+        form: {
+          username: '',
+          password: ''
         }
-      }).catch((err) => {
-        console.log(err)
-      })
+      };
     },
-    sub() {
-      console.log(this.form)
-      this.$store.dispatch('UserLogin', this.form)
-        .then(() => {
-          const state = this.$store.state
-          console.log('state 里面的内容是')
-          console.log(state)
+    methods: {
+      login() {
+        this.$http.post('/api/user/login', {
+          username: this.form.username,
+          password: this.form.password
+        }).then ((res) => {
+          if (res.status === 200) {
+            console.log(res)
+            localStorage.setItem('user', JSON.stringify(res.data[0]))
+            this.$router.push({ path: '/dashboard' })
+          }
+        }).catch((err) => {
+          console.log(err)
         })
+      },
     }
   }
-}
 </script>
 
 <style scoped>
