@@ -120,6 +120,20 @@ router.post('/updateUser', (req, res) => {
 		// 待完成
 	})
 });
+// 更新个人信息
+router.post('/update-user-info', (req, res) => {
+  let params = req.body
+  if (req.session.user !== null) {
+    const id = req.session.user.uid
+    user_m.updateUserInfo(params, id, (result) => {
+      console.log('更新信息成功！')
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
+});
+
 // 查询用户接口
 router.get('/queryAllUser', (req, res) => {
 	user_m.queryAllUser((result) => {

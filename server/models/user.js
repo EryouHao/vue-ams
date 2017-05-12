@@ -27,7 +27,7 @@ module.exports = {
       console.log(username, password);
     pool.getConnection(function (err, connection) {
       if (err) throw err;
-      connection.query('SELECT * FROM `users` WHERE `user_name`=? AND `user_psd`=?', [username, password], function (err, result) {
+      connection.query('SELECT * FROM `users` WHERE `user_account`=? AND `user_psd`=?', [username, password], function (err, result) {
         if (err) throw err;
         console.log('登录里面的result是：')
         console.log('result' + result)
@@ -139,6 +139,24 @@ module.exports = {
       console.log('执行了查询数据操作')
       console.log(sql, id)
       conn.query(sql, id, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+
+  // 更新用户信息
+  updateUserInfo(params, id, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        update users
+        set user_name = ?,user_mobile = ?,user_psd = ?
+        where
+        id = ?
+      `
+      conn.query(sql, [params.name, params.mobile, this.hash(params.newPass), id], (err, result) => {
         if (err) throw err
         cb(result)
         conn.release()

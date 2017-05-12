@@ -90,6 +90,25 @@ module.exports = {
       })
     })
   },
+  // 通过用户id查询已申报通过的资产
+  queryPassAssetById: function (id, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) throw err
+      const sql = `
+        select assets.*, users.user_name
+        from assets, users
+        where
+        assets.user_id = ? and assets.user_id = users.id and assets.asset_state = 1
+      `
+      connection.query(sql, id, (err, result) => {
+        if (err) throw err
+
+        cb(result)
+
+        connection.release()
+      })
+    })
+  },
   // 查询已审核的的所有资产
   queryAllAsset: function (cb) {
     pool.getConnection((err, conn) => {
@@ -139,13 +158,29 @@ module.exports = {
       })
     })
   },
+  // 通过资产申报
+  pass: function (id, assetNumber, state, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        update assets
+        set asset_number = ?, asset_state = ?
+        where id = ?
+      `
+      conn.query(sql, [assetNumber, state, id], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
   // 资产调用
   callAsset: function (id, form, cb) {
     pool.getConnection((err, conn) => {
       if (err) throw err
       const sql = `
         insert into calls
-        (asset_id, new_user_id, new_storage_place, comment)
+        (asset_id, new_user_id, new_storage_place_id, comment)
         values (?, ?, ?, ?)
       `
       const params = [

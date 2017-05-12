@@ -48,7 +48,7 @@
                 <span>{{ props.row.useDirection }}</span>
               </el-form-item>
               <el-form-item label="资产图片">
-                <img src="http://localhost:4001/server/uploads/avatar-1494579693303.jpeg" class="asset-img" alt="资产图片">
+                <img :src="props.row.imgUrl" class="asset-img" alt="资产图片">
               </el-form-item>
             </el-form>
           </template>
@@ -93,7 +93,7 @@
           <template scope="id">
             <el-button
               size="mini"
-              @click="check(id.row.id, 1)">通过</el-button>
+              @click="beforePass(id.row.id)">通过</el-button>
             <el-button
               size="mini"
               type="danger"
@@ -101,6 +101,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog
+        title="资产编号"
+        :visible.sync="dialogVisible"
+        size="tiny">
+        <el-input v-model="form2.assetNumber" placeholder="请输入资产编号"></el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="pass">确 定</el-button>
+        </span>
+      </el-dialog>
       <div class="page">
         <el-pagination
           layout="prev, pager, next"
@@ -119,7 +129,13 @@ export default {
         assetName: '',
         address: '',
       },
-      tableData: []
+      form2: {
+        id: '',
+        assetNumber: '',
+        state: 1,
+      },
+      tableData: [],
+      dialogVisible: false
     }
   },
   computed: {
@@ -178,6 +194,7 @@ export default {
               }
               this.tableData.push(item)
             })
+            console.log(this.tableData)
           }
         }).catch((err) => {
           console.log(err)
@@ -202,6 +219,7 @@ export default {
                 useDirection: asset.asset_usedirection,
                 leaveNumber: asset.asset_leavenum,
                 brand: asset.asset_brand,
+                imgUrl: asset.asset_imgurl,
                 state: this.formatState(asset.asset_state),
               }
               this.tableData.push(item)
@@ -215,6 +233,27 @@ export default {
       this.$http.post('/api/asset/check-asset', {id: id,state: state})
         .then((res) => {
           if (res.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '通过操作成功'
+            })
+          } else {
+            this.$message({
+              type: 'danger',
+              message: '操作失败'
+            })
+          }
+        })
+    },
+    beforePass(id) {
+      this.dialogVisible = true
+      this.form2.id = id
+    },
+    pass() {
+      this.$http.post('/api/asset/check-asset-pass', this.form2)
+        .then((res) => {
+          if (res.status === 200) {
+            this.dialogVisible = false
             this.$message({
               type: 'success',
               message: '通过操作成功'

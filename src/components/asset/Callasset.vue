@@ -99,37 +99,7 @@ export default {
         newStoragePlace: '',
         comment: '',
       },
-      tableData: [{
-        assetName: '联想笔记本',
-        userName: '张三',
-        zcbh: '23123214124',
-        gzrq: '2017-03-23',
-        dj: '4999',
-        xh: '小新700',
-        syfx: '教学',
-        ccbh: 'DB789787797',
-        cj: '上海联想科技有限公司',
-      }, {
-        assetName: '联想笔记本',
-        userName: '张三',
-        zcbh: '23123214124',
-        gzrq: '2017-03-23',
-        dj: '4999',
-        xh: '小新700',
-        syfx: '教学',
-        ccbh: 'DB789787797',
-        cj: '上海联想科技有限公司',
-      }, {
-        assetName: '联想笔记本',
-        userName: '张三',
-        zcbh: '23123214124',
-        gzrq: '2017-03-23',
-        dj: '4999',
-        xh: '小新700',
-        syfx: '教学',
-        ccbh: 'DB789787797',
-        cj: '上海联想科技有限公司',
-      }],
+      tableData: [],
       selectList: [],
       users: [],
       storagePlaces: [],
@@ -188,7 +158,7 @@ export default {
     },
     queryAssetById() {
       console.log('查询了')
-      this.$http.get('/api/asset/queryAsset')
+      this.$http.get('/api/asset/query-pass-asset-by-id')
         .then((res) => {
           if (res.status === 200) {
             console.log(res)

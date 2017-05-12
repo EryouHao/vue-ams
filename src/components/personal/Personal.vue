@@ -6,6 +6,9 @@
         <el-form-item label="姓名">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="form.mobile"></el-input>
+        </el-form-item>
         <el-form-item label="原密码">
           <el-input v-model="form.password"></el-input>
         </el-form-item>
@@ -16,8 +19,8 @@
           <el-input v-model="form.confirmPass"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">保存</el-button>
-        </el-form-item>  
+          <el-button type="primary" @click="submit">保存</el-button>
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -29,11 +32,24 @@ export default {
     return {
       form: {
         name: '',
+        mobile: '',
         password: '',
         newPass: '',
         confirmPass: '',
       }
     }
+  },
+  methods: {
+    submit() {
+      this.$http.post('/api/user/update-user-info', this.form)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log('更新成功')
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+    },
   }
 }
 </script>

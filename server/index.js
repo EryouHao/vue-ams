@@ -27,8 +27,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // 静态文件目录
-// app.use('/static', express.static(__dirname + 'public'));
-app.use(express.static('public'));
+app.use('/server/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use(session({
   secret: 'fehey',
   cookie: { maxAge: 60*60*1000 },
