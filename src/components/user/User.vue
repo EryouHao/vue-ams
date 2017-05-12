@@ -167,7 +167,7 @@ export default {
                 name: user.user_name,
                 accountName: user.user_account,
                 mobile: user.user_mobile,
-                right: user.right_id
+                right: this.formatRight(user.right_id)
               }
               this.tableData.push(tmp)
             })
@@ -175,6 +175,15 @@ export default {
         }).catch((err) => {
           console.log(err)
       })
+    },
+    formatRight(rightId) {
+      if (rightId === 0) {
+        return '管理员'
+      } else if (rightId === 1) {
+        return '教师'
+      } else if (rightId === 2) {
+        return '实验室'
+      }
     },
     editUser(id) {
 

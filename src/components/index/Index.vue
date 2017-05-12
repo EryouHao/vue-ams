@@ -4,12 +4,14 @@
     <div class="content">
       <router-view></router-view>
     </div>
+    <v-footer></v-footer>
   </div>
 </template>
 
 <script>
 // import vSidebar from '../common/SideBar'
 import vHeader from '../common/Header'
+import vFooter from '../common/Footer'
 
 export default {
   data () {
@@ -18,7 +20,8 @@ export default {
     }
   },
   components: {
-    vHeader: vHeader
+    vHeader: vHeader,
+    vFooter: vFooter
   },
   created () {
 //    this.$http.get('/api/user/')
