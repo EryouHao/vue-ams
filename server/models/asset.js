@@ -131,9 +131,9 @@ module.exports = {
     pool.getConnection((err, conn) => {
       if (err) throw err
       const sql = `
-        select *
-        from assets
-        where asset_state=0
+        select assets.*, users.user_name
+        from assets, users
+        where assets.asset_state=0 and assets.user_id = users.id
       `
       conn.query(sql, (err, result) => {
         if (err) throw err

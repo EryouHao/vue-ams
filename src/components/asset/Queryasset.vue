@@ -209,6 +209,7 @@ export default {
             res.data.forEach((asset) => {
               let item = {
                 id: asset.id,
+                userName: asset.user_name,
                 assetName: asset.asset_name,
                 userName: asset.user_name,
                 assetNumber: asset.asset_number,

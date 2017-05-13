@@ -15,7 +15,8 @@ var pool = mysql.createPool({
   user: 'root',
   password: '123456',
   database: 'ams',
-  port: '3306'
+  port: '3306',
+  multipleStatements: true // 可以同时执行SQL
 });
 
 module.exports = pool;

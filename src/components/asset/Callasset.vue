@@ -93,9 +93,7 @@ export default {
         address: '',
       },
       form2: {
-        oldUserId: 2,
         newUserId: '',
-        oldStoragePlace: 2,
         newStoragePlace: '',
         comment: '',
       },
@@ -189,8 +187,6 @@ export default {
     submit() {
       const form = {
         selectIdList: this.selectIdList,
-        oldUserId: this.form2.oldUserId,
-        oldStoragePlace: this.form2.oldStoragePlace,
         newUserId: this.form2.newUserId,
         newStoragePlace: this.form2.newStoragePlace,
         comment: this.form2.comment

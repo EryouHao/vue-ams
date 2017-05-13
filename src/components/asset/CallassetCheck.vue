@@ -21,7 +21,7 @@
                 <span>{{ props.row.oldStoragePlace }}</span>
               </el-form-item>
               <el-form-item label="新存放地点">
-                <span>{{ props.row.newUserName }}</span>
+                <span>{{ props.row.newStoragePlace }}</span>
               </el-form-item>
               <el-form-item label="备注">
                 <span>{{ props.row.comment }}</span>
