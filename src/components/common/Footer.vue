@@ -1,6 +1,7 @@
 <template>
   <div class="footer">
-    Auther: EryouHao
+    ©️ 2017 河北大学计算机科学与技术学院 |
+    Made By <a href="http://fehey.com" target="_blank">EryouHao</a>
   </div>
 </template>
 
@@ -19,5 +20,10 @@ export default {
   .footer {
     text-align: center;
     padding: 20px;
+    font-size: 14px;
+  }
+  .footer a {
+    text-decoration: none;
+    color: #20a0ff;
   }
 </style>

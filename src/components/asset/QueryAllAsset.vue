@@ -87,8 +87,13 @@
       </el-table>
       <div class="page">
         <el-pagination
+          small
+          v-if="totalCount > 10"
           layout="prev, pager, next"
-          :total="1000">
+          :total="totalCount"
+          :current-page="currentPage"
+          :page-sizes="pageSizeChange"
+          @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -103,7 +108,10 @@ export default {
         assetName: '',
         address: '',
       },
-      tableData: []
+      tableData: [],
+      pageSizeChange: [2,3,4],
+      currentPage: 1,
+      totalCount: 0,
     }
   },
   computed: {
@@ -119,7 +127,10 @@ export default {
     }
   },
   created() {
-    this.queryAllAsset()
+    // this.queryAllAsset()
+    this.currentPage = 1
+    this.requestForCurrentPage()
+    console.log(this.tableData)
   },
   methods: {
     formatDate(date) {
@@ -163,6 +174,42 @@ export default {
           console.log(err)
         })
     },
+    handleCurrentChange(val) {
+      console.log(val)
+      this.currentPage = val
+      this.requestForCurrentPage()
+    },
+    requestForCurrentPage() {
+      this.$http.post('/api/asset/query-current-page', {
+        page: (this.currentPage - 1) * 10,
+        size: 10
+      }).then((res) => {
+        if (res.status === 200) {
+          this.totalCount = res.data[0][0].totalCount
+          console.log('totalCount' + this.totalCount)
+          this.tableData = []
+          console.log(res.data[1])
+          res.data[1].forEach((asset) => {
+            let item = {
+              id: asset.id,
+              assetName: asset.asset_name,
+              userName: asset.user_name,
+              assetNumber: asset.asset_number,
+              bill: asset.asset_bill,
+              buyDate: this.formatDate(asset.buy_date),
+              price: asset.asset_price,
+              type: asset.asset_type,
+              useDirection: asset.asset_usedirection,
+              leaveNumber: asset.asset_leavenum,
+              brand: asset.asset_brand,
+              state: this.formatState(asset.asset_state),
+              imgUrl: asset.asset_imgurl,
+            }
+            this.tableData.push(item)
+          })
+        }
+      })
+    },
     // 导出Excel
     exportExcel() {
       this.$http.get('/api/export/export-excel')
@@ -183,7 +230,7 @@ export default {
   }
   .page {
     margin: 20px auto 40px;
-    text-align: center;
+    text-align: right;
   }
   .asset-img {
     width: 300px;

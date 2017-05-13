@@ -151,4 +151,38 @@ router.get('/query-person-asset-count', (req, res) => {
   }
 })
 
+// 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- 管理员
+router.post('/query-current-page', (req, res) => {
+  const params = req.body
+  if (req.session.user !== null) {
+    asset_m.queryCurrentPageAsset(params.page, params.size, (result) => {
+      console.log(result)
+      jsonWrite(res, result)
+    })
+  }
+})
+
+// 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- 普通教师
+router.post('/query-person-current-page', (req, res) => {
+  const params = req.body
+  if (req.session.user !== null) {
+    const id = req.session.user.uid
+    asset_m.queryPersonCurrentPageAsset(id, params.page, params.size, (result) => {
+      console.log(result)
+      jsonWrite(res, result)
+    })
+  }
+})
+
+// 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- （未审核申报）普通教师
+router.post('/query-uncheck-current-page', (req, res) => {
+  const params = req.body
+  if (req.session.user !== null) {
+    asset_m.queryUncheckCurrentPageAsset(params.page, params.size, (result) => {
+      console.log(result)
+      jsonWrite(res, result)
+    })
+  }
+})
+
 module.exports = router;

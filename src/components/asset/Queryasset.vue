@@ -91,13 +91,10 @@
           prop="id"
           label="操作">
           <template scope="id">
-            <el-button
-              size="mini"
-              @click="beforePass(id.row.id)">通过</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="check(id.row.id,2)">不通过</el-button>
+            <el-button-group>
+              <el-button :plain="true" type="primary" size="small" icon="check" @click="beforePass(id.$index, id.row.id)"></el-button>
+              <el-button :plain="true" type="danger" size="small" icon="close" @click="confirmReject(id.$index, id.row.id,2)"></el-button>
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>
@@ -113,8 +110,13 @@
       </el-dialog>
       <div class="page">
         <el-pagination
+          small
+          v-if="totalCount > 10"
           layout="prev, pager, next"
-          :total="1000">
+          :total="totalCount"
+          :current-page="currentPage"
+          :page-sizes="pageSizeChange"
+          @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -135,7 +137,11 @@ export default {
         state: 1,
       },
       tableData: [],
-      dialogVisible: false
+      index: '',
+      dialogVisible: false,
+      pageSizeChange: [2,3,4],
+      currentPage: 1,
+      totalCount: 0,
     }
   },
   computed: {
@@ -152,9 +158,11 @@ export default {
   },
   created() {
     if (this.right === 'TEACHER') {
-      this.queryAssetById()
+      // this.queryAssetById()
+      this.requestPersonForCurrentPage()
     } else if (this.right === 'ADMIN') {
-      this.queryAssetUncheck()
+      // this.queryAssetUncheck()
+      this.requestUncheckForCurrentPage()
     }
   },
   methods: {
@@ -230,13 +238,100 @@ export default {
           console.log(err)
         })
     },
-    check(id, state) {
+    handleCurrentChange(val) {
+      console.log(val)
+      this.currentPage = val
+      if (this.right === 'TEACHER') {
+        this.requestPersonForCurrentPage()
+      } else if (this.right === 'ADMIN') {
+        this.requestUncheckForCurrentPage()
+      }
+    },
+    requestPersonForCurrentPage() {
+      this.$http.post('/api/asset/query-person-current-page', {
+        page: (this.currentPage - 1) * 10,
+        size: 10
+      }).then((res) => {
+        if (res.status === 200) {
+          this.totalCount = res.data[0][0].totalCount
+          console.log('totalCount' + this.totalCount)
+          this.tableData = []
+          console.log(res.data[1])
+          res.data[1].forEach((asset) => {
+            let item = {
+              id: asset.id,
+              assetName: asset.asset_name,
+              userName: asset.user_name,
+              assetNumber: asset.asset_number,
+              bill: asset.asset_bill,
+              buyDate: this.formatDate(asset.buy_date),
+              price: asset.asset_price,
+              type: asset.asset_type,
+              useDirection: asset.asset_usedirection,
+              leaveNumber: asset.asset_leavenum,
+              brand: asset.asset_brand,
+              state: this.formatState(asset.asset_state),
+              imgUrl: asset.asset_imgurl,
+            }
+            this.tableData.push(item)
+          })
+        }
+      })
+    },
+    requestUncheckForCurrentPage() {
+      this.$http.post('/api/asset/query-uncheck-current-page', {
+        page: (this.currentPage - 1) * 10,
+        size: 10
+      }).then((res) => {
+        if (res.status === 200) {
+          this.totalCount = res.data[0][0].totalCount
+          console.log('totalCount' + this.totalCount)
+          this.tableData = []
+          console.log(res.data[1])
+          res.data[1].forEach((asset) => {
+            let item = {
+              id: asset.id,
+              assetName: asset.asset_name,
+              userName: asset.user_name,
+              assetNumber: asset.asset_number,
+              bill: asset.asset_bill,
+              buyDate: this.formatDate(asset.buy_date),
+              price: asset.asset_price,
+              type: asset.asset_type,
+              useDirection: asset.asset_usedirection,
+              leaveNumber: asset.asset_leavenum,
+              brand: asset.asset_brand,
+              state: this.formatState(asset.asset_state),
+              imgUrl: asset.asset_imgurl,
+            }
+            this.tableData.push(item)
+          })
+        }
+      })
+    },
+    confirmReject(id, rejectNum) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.check(id, rejectNum)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消拒绝操作'
+        });
+      });
+    },
+    check(index,id, state) {
+      this.index = index
       this.$http.post('/api/asset/check-asset', {id: id,state: state})
         .then((res) => {
           if (res.status === 200) {
+            this.tableData.splice(this.index, 1);
             this.$message({
               type: 'success',
-              message: '通过操作成功'
+              message: '拒绝操作成功'
             })
           } else {
             this.$message({
@@ -246,14 +341,16 @@ export default {
           }
         })
     },
-    beforePass(id) {
+    beforePass(index,id) {
       this.dialogVisible = true
       this.form2.id = id
+      this.index = index
     },
     pass() {
       this.$http.post('/api/asset/check-asset-pass', this.form2)
         .then((res) => {
           if (res.status === 200) {
+            this.tableData.splice(this.index, 1);
             this.dialogVisible = false
             this.$message({
               type: 'success',
@@ -277,7 +374,7 @@ export default {
   }
   .page {
     margin: 20px auto 40px;
-    text-align: center;
+    text-align: right;
   }
   .asset-img {
     width: 300px;

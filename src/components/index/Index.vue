@@ -35,8 +35,14 @@ export default {
 </script>
 
 <style scoped>
+  .index {
+    display: flex;
+    flex-flow: column;
+	  min-height: 100vh;
+  }
   .content {
-    max-width: 1200px;
+    width: 1200px;
+    flex: 1;
     margin: 10px auto;
     padding: 50px 50px 80px;
     background: #fff;

@@ -252,5 +252,70 @@ module.exports = {
         conn.release()
       })
     })
-  }
+  },
+
+  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- 管理员
+  queryCurrentPageAsset: function (page, size, cb) {
+    console.log(page, size)
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select count(1) as totalCount from assets where asset_state = 1;
+
+        select a.*, u.user_name
+        from assets a, users u
+        where a.asset_state = 1 and a.user_id = u.id
+        order by id
+        limit ?, ?;
+      `
+      conn.query(sql, [page, size], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+
+  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- 普通教师
+  queryPersonCurrentPageAsset: function (id, page, size, cb) {
+    console.log(page, size)
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select count(1) as totalCount from assets where user_id = ? and asset_state = 1;
+
+        select a.*, u.user_name
+        from assets a, users u
+        where a.user_id = ? and a.asset_state = 1 and a.user_id = u.id
+        order by id
+        limit ?, ?;
+      `
+      conn.query(sql, [id, id, page, size], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- （未审核申报资产）管理员
+  queryUncheckCurrentPageAsset: function (page, size, cb) {
+    console.log(page, size)
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select count(1) as totalCount from assets where asset_state = 0;
+
+        select a.*, u.user_name
+        from assets a, users u
+        where a.asset_state = 0 and a.user_id = u.id
+        order by id
+        limit ?, ?;
+      `
+      conn.query(sql, [page, size], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
 }
