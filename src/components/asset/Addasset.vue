@@ -16,9 +16,14 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <!--<el-col :span="12">
           <el-form-item label="资产编号">
             <el-input v-model="form.assetNumber"></el-input>
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="使用方向">
+            <el-input v-model="form.useDirection"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -68,18 +73,13 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="使用方向">
-            <el-input v-model="form.useDirection"></el-input>
-          </el-form-item>
-        </el-col>
+      <!-- <el-row>
         <el-col :span="12">
           <el-form-item label="出厂编号">
             <el-input v-model="form.leaveNum"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col :span="12">
           <el-form-item label="厂家">
@@ -149,12 +149,12 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">
+        <!-- <el-col :span="6">
           <el-form-item label="数量">
             <el-input v-model="form.count"></el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="18">
+        </el-col> -->
+        <el-col :span="24">
           <el-form-item label="资产图片">
             <el-upload
               ref="upload"

@@ -2,7 +2,7 @@
   <div class="personal-content">
     <h2>修改信息</h2>
     <div class="content">
-      <el-form ref="form" :model="form" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="姓名">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -12,10 +12,10 @@
         <el-form-item label="原密码">
           <el-input v-model="form.password"></el-input>
         </el-form-item>
-        <el-form-item label="新密码">
+        <el-form-item label="新密码" prop="newPass">
           <el-input v-model="form.newPass"></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码">
+        <el-form-item label="确认新密码" prop="confirmPass">
           <el-input v-model="form.confirmPass"></el-input>
         </el-form-item>
         <el-form-item>
@@ -29,26 +29,64 @@
 <script lang="babel">
 export default {
   data () {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.form.confirmPass !== '') {
+          this.$refs.form.validateField('confirmPass');
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.form.newPass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
-        name: '',
-        mobile: '',
+        name: JSON.parse(localStorage.user).user_name,
+        mobile: JSON.parse(localStorage.user).user_mobile,
         password: '',
         newPass: '',
         confirmPass: '',
+      },
+      rules: {
+        newPass: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        confirmPass: [
+          { validator: validatePass2, trigger: 'blur' }
+        ],
       }
     }
   },
   methods: {
     submit() {
-      this.$http.post('/api/user/update-user-info', this.form)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log('更新成功')
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$http.post('/api/user/update-user-info', this.form)
+            .then((res) => {
+              if (res.status === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '更新成功'
+                })
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+
     },
   }
 }
