@@ -14,8 +14,10 @@
         <el-form-item>
           <el-button type="primary">查询</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="success" @click="exportExcel">导出Excel</el-button>
+        </el-form-item>
       </el-form>
-      <el-button type="primary" @click="exportExcel">导出Excel</el-button>
     </div>
     <div class="result-content">
       <el-table
@@ -101,40 +103,7 @@ export default {
         assetName: '',
         address: '',
       },
-      tableData: [{
-        assetName: '联想笔记本',
-        userName: '张三',
-        assetNumber: '23123214124',
-        buyDate: '2017-03-23',
-        price: '4999',
-        type: '小新700',
-        useDirection: '教学',
-        leaveNumber: 'DB789787797',
-        brand: '上海联想科技有限公司',
-        state: 0,
-      }, {
-        assetName: '联想笔记本',
-        userName: '张三',
-        assetNumber: '23123214124',
-        buyDate: '2017-03-23',
-        price: '4999',
-        type: '小新700',
-        useDirection: '教学',
-        leaveNumber: 'DB789787797',
-        brand: '上海联想科技有限公司',
-        state: 0,
-      }, {
-        assetName: '联想笔记本',
-        userName: '张三',
-        assetNumber: '23123214124',
-        buyDate: '2017-03-23',
-        price: '4999',
-        type: '小新700',
-        useDirection: '教学',
-        leaveNumber: 'DB789787797',
-        brand: '上海联想科技有限公司',
-        state: 1,
-      }]
+      tableData: []
     }
   },
   computed: {
@@ -150,7 +119,7 @@ export default {
     }
   },
   created() {
-    // this.queryAllAsset()
+    this.queryAllAsset()
   },
   methods: {
     formatDate(date) {
@@ -222,14 +191,14 @@ export default {
   }
 </style>
 <style>
-  .table-expand {
+  .el-table__expanded-cell .table-expand {
     font-size: 0;
   }
-  .table-expand label {
+  .el-table__expanded-cell .table-expand label {
     width: 90px;
     color: #99a9bf;
   }
-  .table-expand .el-form-item {
+  .el-table__expanded-cell .table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;

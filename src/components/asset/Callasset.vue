@@ -156,7 +156,7 @@ export default {
     },
     queryAssetById() {
       console.log('查询了')
-      this.$http.get('/api/asset/query-pass-asset-by-id')
+      this.$http.get('/api/asset/query-uncall')
         .then((res) => {
           if (res.status === 200) {
             console.log(res)
@@ -192,9 +192,14 @@ export default {
         comment: this.form2.comment
       }
       console.log(form)
+
+      // 根据 indexOf 求出所选资产的 index
+      // TODO...
+
       this.$http.post('/api/asset/call-asset', form)
         .then((res) => {
           console.log(res)
+          this.$router.push('/callasset')
         })
     }
   }

@@ -2,23 +2,31 @@
   <div class="dashboard">
     <h2>资产概览</h2>
     <div class="statistics">
-      <el-row>
+      <el-row v-if="!isLab">
         <el-col :span="8">
           <div class="item">
             系统资产总数<br>
-            <span class="number">1206</span>
+            <span class="number">{{ assetCount }}</span>
           </div>
         </el-col>
         <el-col :span="8">
           <div class="item">
             待审申报资产<br>
-            <span class="number">35</span>
+            <span class="number">{{ unCheckAssetCount }}</span>
           </div>
         </el-col>
         <el-col :span="8">
           <div class="item">
             待审调用资产<br>
-            <span class="number">12</span>
+            <span class="number">{{ callAssetCount }}</span>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row v-if="isLab">
+        <el-col :span="8">
+          <div class="item">
+            实验室存放资产<br>
+            <span class="number">{{ callAssetCount }}</span>
           </div>
         </el-col>
       </el-row>
@@ -54,7 +62,11 @@
 export default {
   data () {
     return {
-      msg: 'hello',
+      assetCount: '0',
+      unCheckAssetCount: '0',
+      callAssetCount: '0',
+      right: 1,
+      isLab: false, // 是否是实验室人员
       tableData: [
         {
           date: '2017-05-01',
@@ -83,7 +95,47 @@ export default {
       ]
     };
   },
+  created() {
+    this.right = JSON.parse(localStorage.user).right_id
+    if (this.right === 0) { // 管理员
+      this.queryAllAssetCount()
+    } else if (this.right === 1) {
+      this.queryPersonAssetCount()
+    } else if (this.right === 2) {
+      this.isLab = true
+      this.queryLabAssetCount()
+    }
+  },
   methods: {
+    queryAllAssetCount() {
+      this.$http.get('/api/asset/query-all-asset-count')
+        .then((res) => {
+          if (res.status === 200) {
+            this.assetCount = res.data[0][0].assetCount
+            this.unCheckAssetCount = res.data[1][0].unCheckAssetCount
+            this.callAssetCount = res.data[2][0].callAssetCount
+            console.log(res.data)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+    },
+    queryPersonAssetCount() {
+      this.$http.get('/api/asset/query-person-asset-count')
+        .then((res) => {
+          if (res.status === 200) {
+            this.assetCount = res.data[0][0].assetCount
+            this.unCheckAssetCount = res.data[1][0].unCheckAssetCount
+            this.callAssetCount = res.data[2][0].callAssetCount
+            console.log(res.data)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+    },
+    queryLabAssetCount() {
+
+    }
   }
 }
 </script>

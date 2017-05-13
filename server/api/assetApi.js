@@ -42,7 +42,7 @@ router.get('/query-all-asset', (req, res) => {
 	}
 })
 
-// 查询资产
+// 通过用户id查询资产
 router.get('/query-asset-by-id', (req, res) => {
   if (req.session.user !== null) {
     const id = req.session.user.uid
@@ -54,6 +54,21 @@ router.get('/query-asset-by-id', (req, res) => {
     console.log('你需要登录才可以操作哦！')
   }
 })
+
+// 通过用户id查询可调用资产
+router.get('/query-uncall', (req, res) => {
+  if (req.session.user !== null) {
+    const id = req.session.user.uid
+    asset_m.queryUncallAsset(id, (result) => {
+      console.log('查询成功！')
+      console.log(result)
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
+})
+
 // 通过用户id查询申报成功资产
 router.get('/query-pass-asset-by-id', (req, res) => {
   if (req.session.user !== null) {
@@ -109,6 +124,31 @@ router.post('/call-asset', (req, res) => {
 	} else {
 		console.log('你需要登录才可以操作哦!')
 	}
+})
+
+// 查询系统资产总数
+router.get('/query-all-asset-count', (req, res) => {
+  if (req.session.user !== null) {
+    asset_m.queryAllAssetCount((result) => {
+      console.log('查询成功！')
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
+})
+
+// 通过id查询资产数量
+router.get('/query-person-asset-count', (req, res) => {
+  if (req.session.user !== null) {
+    const id = req.session.user.uid
+    asset_m.queryPersonAssetCount(id, (result) => {
+      console.log('查询成功！')
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
 })
 
 module.exports = router;

@@ -188,7 +188,7 @@ export default {
   data () {
     return {
       form: {
-        assetName: '戴尔T430',
+        assetName: '',
         userId: '',
         assetNumber: '',
         bill: '',
@@ -212,7 +212,8 @@ export default {
         mark: '',
         count: '',
         imgUrl: '',
-        state: 0 // 资产状态，申请中为0
+        state: 0, // 资产状态，申请中为0
+        calling: 0 // 是否正在调用，默认为否
       },
       users: [], // 使用人列表
       storagePlaces: [],

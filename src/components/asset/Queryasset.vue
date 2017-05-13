@@ -20,7 +20,7 @@
       <el-table
       :data="tableData"
       style="width: 100%">
-        <el-table-column type="expand">
+        <el-table-column type="expand" class="demo-table">
           <template scope="props">
             <el-form label-position="left" inline class="table-expand">
               <el-form-item label="资产名称">
@@ -284,15 +284,16 @@ export default {
     height: 200px;
   }
 </style>
+
 <style>
-  .table-expand {
+  .el-table__expanded-cell .table-expand {
     font-size: 0;
   }
-  .table-expand label {
+  .el-table__expanded-cell .table-expand label {
     width: 90px;
     color: #99a9bf;
   }
-  .table-expand .el-form-item {
+  .el-table__expanded-cell .table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;

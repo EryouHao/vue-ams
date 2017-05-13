@@ -1,22 +1,5 @@
 const pool = require('../conf/db');
 
-// function once(sql,cb){
-// 	pool.getConnection(function(err,con){
-// 		if(err){throw err};
-// 		con.query(sql,function(err,result){
-// 			con.release();
-// 		  	if(err){throw err}
-// 		  	cb(result)
-// 		})
-// 	})
-// }
-
-// once(sql,function(result1){
-// 	once(sql2,function(result2){
-// 		theEnd()
-// 	})
-// })
-
 module.exports = {
   // 查询调用申请列表
   queryCallList(cb) {
@@ -55,15 +38,34 @@ module.exports = {
           )
           SET assets.user_id = calls.new_user_id,
           assets.asset_storageplace = calls.new_storage_place_id;
+
+          update assets
+          set calling = 0
+          where id = (
+            select asset_id
+            from calls
+            where id = ?
+          );
+
           delete from calls where id = ?;
         `
       } else {
         sql = `
-          delete from calls where id = ?
+          select * from calls where id = ?;
+
+          update assets
+          set calling = 0
+          where id = (
+            select asset_id
+            from calls
+            where id = ?
+          );
+
+          delete from calls where id = ?;
         `
       }
       console.log(sql)
-      conn.query(sql, [id,id], (err, result) => {
+      conn.query(sql, [id, id, id], (err, result) => {
         if (err) throw err
         console.log(result)
         cb(result)

@@ -33,8 +33,9 @@ module.exports = {
           asset_imgurl,
           asset_orgid,
           asset_state,
-          asset_mark
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          asset_mark,
+          calling
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `
       const params = [
         form.assetName,
@@ -60,7 +61,8 @@ module.exports = {
         form.imgUrl,
         form.orgId,
         form.state,
-        form.mark
+        form.mark,
+        form.calling
       ]
       connection.query(sql, params, (err, results) => {
           if (err) throw err
@@ -105,6 +107,23 @@ module.exports = {
 
         cb(result)
 
+        connection.release()
+      })
+    })
+  },
+  // 通过用户id查询可调用的资产
+  queryUncallAsset: function (id, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) throw err
+      const sql = `
+        select a.*, u.user_name
+        from assets a, users u
+        where
+        a.user_id = ? and a.user_id = u.id and a.asset_state = 1 and a.calling = 0
+      `
+      connection.query(sql, id, (err, result) => {
+        if (err) throw err
+        cb(result)
         connection.release()
       })
     })
@@ -181,15 +200,53 @@ module.exports = {
       const sql = `
         insert into calls
         (asset_id, new_user_id, new_storage_place_id, comment)
-        values (?, ?, ?, ?)
+        values (?, ?, ?, ?);
+        update assets
+        set calling = 1
+        where id = ?;
       `
       const params = [
         id,
         form.newUserId,
         form.newStoragePlace,
-        form.comment
+        form.comment,
+        id
       ]
       conn.query(sql, params, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+
+  // 查询系统资产总数
+  queryAllAssetCount: function (cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select count(*) as assetCount from assets where asset_state = 1;
+        select count(*) as unCheckAssetCount from assets where asset_state = 0;
+        select count(*) as callAssetCount from calls;
+      `
+      conn.query(sql, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+
+  // 通过用户id查询资产数目
+  queryPersonAssetCount: function (id, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select count(*) as assetCount from assets where user_id = ? and asset_state = 1;
+        select count(*) as unCheckAssetCount from assets where user_id = ? and asset_state = 0;
+        select count(*) as callAssetCount from assets where user_id = ? and calling = 1;
+      `
+      conn.query(sql, [id, id, id], (err, result) => {
         if (err) throw err
         cb(result)
         conn.release()

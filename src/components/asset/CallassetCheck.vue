@@ -55,11 +55,11 @@
           <template scope="id">
             <el-button
               size="mini"
-              @click="check(id.row.id, 'PASS')">通过</el-button>
+              @click="check(id.$index, id.row.id, 'PASS')">通过</el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="check(id.row.id, 'REJECT')">不通过</el-button>
+              @click="check(id.$index, id.row.id, 'REJECT')">不通过</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -126,11 +126,12 @@ export default {
           console.log(err)
         })
     },
-    check(id, state) {
-      console.log(id, state)
+    check(index, id, state) {
+      console.log(index, id, state)
       this.$http.post('/api/call/check-call', {id: id, state: state})
         .then((res) => {
           if (res.status === 200) {
+            this.tableData.splice(index, 1);
             this.$message({
               type: 'success',
               message: '同意调用'
@@ -138,7 +139,7 @@ export default {
           } else {
             this.$message({
               type: 'danger',
-              message: '拒绝'
+              message: '拒绝调用'
             })
           }
         })
