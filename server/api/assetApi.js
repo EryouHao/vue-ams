@@ -61,7 +61,6 @@ router.get('/query-uncall', (req, res) => {
     const id = req.session.user.uid
     asset_m.queryUncallAsset(id, (result) => {
       console.log('查询成功！')
-      console.log(result)
       jsonWrite(res, result)
     })
   } else {

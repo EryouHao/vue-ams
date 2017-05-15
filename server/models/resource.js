@@ -79,5 +79,40 @@ module.exports = {
         conn.release()
       })
     })
+  },
+  // 查询系统字典列表
+  queryCurrentPageResourceList(page, size, cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select count(1) as totalCount from resource;
+
+        select r.id, rt.name type, r.name name
+        from resource as r
+        left join resource_type as rt on rt.id = r.type_id
+        order by r.id
+        limit ?, ?;
+      `
+      conn.query(sql, [page, size], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+  // 查询资产类型
+  queryResourceTypeList(cb) {
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select * from resource_type;
+      `
+      conn.query(sql, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+
+    })
   }
 }

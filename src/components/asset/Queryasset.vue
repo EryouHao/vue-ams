@@ -310,12 +310,13 @@ export default {
       })
     },
     confirmReject(id, rejectNum) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      this.$confirm('您确定要拒绝此申报申请吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.check(id, rejectNum)
+        console.log(id, rejectNum)
+        this.check(id, rejectNum, 2)
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -323,7 +324,7 @@ export default {
         });
       });
     },
-    check(index,id, state) {
+    check(index, id, state) {
       this.index = index
       this.$http.post('/api/asset/check-asset', {id: id,state: state})
         .then((res) => {

@@ -58,4 +58,22 @@ router.get('/query-resource-by-id', (req, res) => {
 	}
 })
 
+// 查询系统字典列表
+router.post('/query-resource-list', (req, res) => {
+  const params = req.body
+  if (req.session.user !== null) {
+    resource_m.queryCurrentPageResourceList(params.page, params.size, (result) => {
+      jsonWrite(res, result)
+    })
+  }
+})
+// 查询资产类型
+router.get('/type-list', (req, res) => {
+  if (req.session.user !== null)  {
+    resource_m.queryResourceTypeList((result) => {
+      jsonWrite(res, result)
+    })
+  }
+})
+
 module.exports = router;

@@ -7,7 +7,6 @@ export const types = {
 export const auth = {
   checkAuth: function (right) {
     const localRight = (JSON.parse(localStorage.getItem('user')).right_id).toString()
-    console.log(localRight)
     return localRight === right
   }
 }
