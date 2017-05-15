@@ -57,6 +57,10 @@ export default {
             // this.delCookie('hellocookie')
             localStorage.removeItem('user')
             this.$router.push({ path: '/login' })
+            this.$message({
+              type: 'success',
+              message: '登出成功，祝您工作愉快！'
+            })
           }
         })
     },

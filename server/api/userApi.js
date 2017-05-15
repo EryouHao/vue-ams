@@ -48,7 +48,9 @@ router.post('/login', (req, res, next) => {
 			console.log('登录成功');
 			// res.redirect('/');
 		} else {
-			console.log('登录失败！');
+      console.log('登录失败！');
+      return res.json({status: 404, message: '登录失败'});
+
 		}
 	})
 })

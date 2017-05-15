@@ -80,7 +80,7 @@ module.exports = {
       })
     })
   },
-  // 查询系统字典列表
+  // 查询当前页系统字典列表
   queryCurrentPageResourceList(page, size, cb) {
     pool.getConnection((err, conn) => {
       if (err) throw err
@@ -113,6 +113,26 @@ module.exports = {
         conn.release()
       })
 
+    })
+  },
+  // 增加字典
+  addResource(form,cb) {
+    const params = [
+      form.typeId,
+      form.name
+    ]
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        insert into resource
+        (type_id, name)
+        values (?, ?);
+      `
+      conn.query(sql, params, (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
     })
   }
 }

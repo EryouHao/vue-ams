@@ -3,7 +3,7 @@
     <h2>字典管理</h2>
     <el-form :inline="true" :model="form" class="demo-form-inline">
       <el-form-item label="字典类型">
-        <el-select v-model="form.type" placeholder="字典类型" props="typeList">
+        <el-select v-model="form.typeId" placeholder="字典类型" props="typeList">
           <el-option label="存放地点" v-for="(type, index) in typeList" :key="index" :label="type.name" :value="type.id"></el-option>
         </el-select>
       </el-form-item>
@@ -46,7 +46,7 @@ export default {
   data: function () {
     return {
       form: {
-        type: '',
+        typeId: '',
         name: '',
       },
       tableData: [],
@@ -62,7 +62,14 @@ export default {
   },
   methods: {
     submit() {
-
+      this.$http.post('/api/resource/add', this.form)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log('增加成功')
+          }else {
+            console.info('增加失败')
+          }
+        })
     },
     handleCurrentChange(val) {
       this.currentPage = val

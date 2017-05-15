@@ -67,10 +67,21 @@ router.post('/query-resource-list', (req, res) => {
     })
   }
 })
+
 // 查询资产类型
 router.get('/type-list', (req, res) => {
   if (req.session.user !== null)  {
     resource_m.queryResourceTypeList((result) => {
+      jsonWrite(res, result)
+    })
+  }
+})
+
+// 增加字典
+router.post('/add', (req,res) => {
+  const params = req.body
+  if (req.session.user !== null) {
+    resource_m.addResource(params, (result) => {
       jsonWrite(res, result)
     })
   }

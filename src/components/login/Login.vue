@@ -31,10 +31,19 @@
           username: this.form.username,
           password: this.form.password
         }).then ((res) => {
-          if (res.status === 200) {
+          if (res.status === 200 && res.data.status !== 404) {
             console.log(res)
             localStorage.setItem('user', JSON.stringify(res.data[0]))
             this.$router.push({ path: '/dashboard' })
+            this.$message({
+              type: 'success',
+              message: '登录成功，欢迎您！'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '登录失败，请检查用户名或密码！'
+            })
           }
         }).catch((err) => {
           console.log(err)
