@@ -2,7 +2,7 @@
   <div class="header">
     <el-row>
       <el-col :span="4">
-        <span class="logo">资产管理系统</span>
+        <span class="logo"><img class="logo-img" src="/static/images/logo.png" alt="">资产管理系统</span>
       </el-col>
       <el-col :span="16">
         <el-menu :router="true" :default-active="this.$router.currentRoute.path" mode="horizontal" @select="handleSelect">
@@ -86,6 +86,15 @@ export default {
     font-size: 18px;
     line-height: 60px;
     background: #fff;
+    vertical-align: center;
+    position: relative;
+  }
+  .logo-img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 26px;
+    top: 13px;
   }
   .logout {
     margin-top: 10px;

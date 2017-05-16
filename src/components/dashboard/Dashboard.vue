@@ -31,7 +31,7 @@
         </el-col>
       </el-row>
     </div>
-    <h2>最新动态</h2>
+    <h2>申请动态</h2>
     <el-table
       :data="tableData"
       style="width: 100%">
@@ -42,18 +42,29 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="申请人"
+        label="资产名称"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="assetName"
-        label="资产名称">
+        prop="type"
+        label="型号">
       </el-table-column>
       <el-table-column
-        prop="type"
-        label="申请类别">
+        prop="state"
+        label="申请状态">
       </el-table-column>
     </el-table>
+    <div class="page">
+      <el-pagination
+        small
+        v-if="totalCount > 5"
+        layout="prev, pager, next"
+        :total="totalCount"
+        :current-page="currentPage"
+        :page-sizes="pageSizeChange"
+        @current-change="handleCurrentChange">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -67,46 +78,30 @@ export default {
       callAssetCount: '0',
       right: 1,
       isLab: false, // 是否是实验室人员
-      tableData: [
-        {
-          date: '2017-05-01',
-          name: '张三',
-          assetName: '戴尔T430',
-          type: '资产申报',
-        },
-        {
-          date: '2017-04-27',
-          name: '李四',
-          assetName: '得力打印机',
-          type: '资产调用',
-        },
-        {
-          date: '2017-04-15',
-          name: '张三',
-          assetName: '戴尔T430',
-          type: '资产申报',
-        },
-        {
-          date: '2017-03-22',
-          name: '李四',
-          assetName: '圆凳',
-          type: '资产申报',
-        },
-      ]
+      tableData: [],
+      pageSizeChange: [2,3,4],
+      currentPage: 1,
+      totalCount: 0,
     };
   },
   created() {
     this.right = JSON.parse(localStorage.user).right_id
     if (this.right === 0) { // 管理员
+      this.queryAllDoing()
       this.queryAllAssetCount()
-    } else if (this.right === 1) {
+
+    } else if (this.right === 1) { // 普通教师
       this.queryPersonAssetCount()
-    } else if (this.right === 2) {
+      this.queryDoing()
+    } else if (this.right === 2) { // 实验室
       this.isLab = true
       this.queryLabAssetCount()
     }
   },
   methods: {
+    formatDate(date) {
+      return date.substring(0, 10)
+    },
     queryAllAssetCount() {
       this.$http.get('/api/asset/query-all-asset-count')
         .then((res) => {
@@ -135,7 +130,58 @@ export default {
     },
     queryLabAssetCount() {
 
-    }
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      if (this.right === 0) {
+        this.queryAllDoing()
+      } else if (this.right === 1) {
+        this.queryDoing()
+      }
+    },
+    queryDoing() {
+      this.$http.post('/api/asset/query-doing', {
+        page: (this.currentPage - 1) * 10,
+        size: 10
+      }).then((res) => {
+          if (res.status === 200) {
+            console.log(res.data)
+            this.totalCount = res.data[0][0].totalCount
+            this.tableData = []
+            res.data[1].forEach((item) => {
+              let obj = {
+                date: this.formatDate(item.asset_submitdate),
+                name: item.asset_name,
+                type: item.asset_type,
+                state: item.asset_state === 0 ? '申报审核中' : '调用审核中'
+              }
+              this.tableData.push(obj)
+            })
+          }
+        })
+    },
+    queryAllDoing() {
+      console.log('1')
+      this.$http.post('/api/asset/query-all-doing', {
+        page: (this.currentPage - 1) * 10,
+        size: 10
+      }).then((res) => {
+          if (res.status === 200) {
+            console.log(res.data)
+            this.totalCount = res.data[0][0].totalCount
+            this.tableData = []
+            res.data[1].forEach((item) => {
+              let obj = {
+                date: this.formatDate(item.asset_submitdate),
+                name: item.asset_name,
+                type: item.asset_type,
+                state: item.asset_state === 0 ? '申报审核中' : '调用审核中'
+              }
+              this.tableData.push(obj)
+            })
+          }
+        })
+    },
   }
 }
 </script>

@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="queryAssetById">查询</el-button>
+          <el-button type="primary">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -20,39 +20,7 @@
       <el-table
       :data="tableData"
       style="width: 100%">
-        <el-table-column type="expand" class="demo-table">
-          <template scope="props">
-            <el-form label-position="left" inline class="table-expand">
-              <el-form-item label="资产名称">
-                <span>{{ props.row.assetName }}</span>
-              </el-form-item>
-              <el-form-item label="使用人">
-                <span>{{ props.row.userName }}</span>
-              </el-form-item>
-              <el-form-item label="资产编号">
-                <span>{{ props.row.assetNumber }}</span>
-              </el-form-item>
-              <el-form-item label="发票">
-                <span>{{ props.row.bill }}</span>
-              </el-form-item>
-              <el-form-item label="购置日期">
-                <span>{{ props.row.buyDate }}</span>
-              </el-form-item>
-              <el-form-item label="单价">
-                <span>{{ props.row.price }}</span>
-              </el-form-item>
-              <el-form-item label="型号">
-                <span>{{ props.row.type }}</span>
-              </el-form-item>
-              <el-form-item label="使用方向">
-                <span>{{ props.row.useDirection }}</span>
-              </el-form-item>
-              <el-form-item label="资产图片">
-                <img :src="props.row.imgUrl" class="asset-img" alt="资产图片">
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
+        <expand></expand>
         <el-table-column
           prop="assetName"
           label="资产名称">
@@ -124,6 +92,8 @@
 </template>
 
 <script lang="babel">
+import Expand from './expand/Expand'
+
 export default {
   data () {
     return {
@@ -144,6 +114,9 @@ export default {
       totalCount: 0,
     }
   },
+  components: {
+    Expand,
+  },
   computed: {
     right() {
       const rightId = JSON.parse(localStorage.user).right_id
@@ -158,10 +131,8 @@ export default {
   },
   created() {
     if (this.right === 'TEACHER') {
-      // this.queryAssetById()
       this.requestPersonForCurrentPage()
     } else if (this.right === 'ADMIN') {
-      // this.queryAssetUncheck()
       this.requestUncheckForCurrentPage()
     }
   },
@@ -178,68 +149,7 @@ export default {
         return '未通过'
       }
     },
-    queryAssetById() {
-      console.log('查询了')
-      this.$http.get('/api/asset/query-asset-by-id')
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res)
-            res.data.forEach((asset) => {
-              let item = {
-                id: asset.id,
-                assetName: asset.asset_name,
-                userName: asset.user_name,
-                assetNumber: asset.asset_number,
-                bill: asset.asset_bill,
-                buyDate: this.formatDate(asset.buy_date),
-                price: asset.asset_price,
-                type: asset.asset_type,
-                useDirection: asset.asset_usedirection,
-                leaveNumber: asset.asset_leavenum,
-                brand: asset.asset_brand,
-                state: this.formatState(asset.asset_state),
-                imgUrl: asset.asset_imgurl,
-              }
-              this.tableData.push(item)
-            })
-            console.log(this.tableData)
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-    },
-    queryAssetUncheck() {
-      console.log('查询了')
-      this.$http.get('/api/asset/query-asset-uncheck')
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res)
-            res.data.forEach((asset) => {
-              let item = {
-                id: asset.id,
-                userName: asset.user_name,
-                assetName: asset.asset_name,
-                userName: asset.user_name,
-                assetNumber: asset.asset_number,
-                bill: asset.asset_bill,
-                buyDate: this.formatDate(asset.buy_date),
-                price: asset.asset_price,
-                type: asset.asset_type,
-                useDirection: asset.asset_usedirection,
-                leaveNumber: asset.asset_leavenum,
-                brand: asset.asset_brand,
-                imgUrl: asset.asset_imgurl,
-                state: this.formatState(asset.asset_state),
-              }
-              this.tableData.push(item)
-            })
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-    },
     handleCurrentChange(val) {
-      console.log(val)
       this.currentPage = val
       if (this.right === 'TEACHER') {
         this.requestPersonForCurrentPage()
@@ -259,20 +169,31 @@ export default {
           console.log(res.data[1])
           res.data[1].forEach((asset) => {
             let item = {
-              id: asset.id,
-              assetName: asset.asset_name,
-              userName: asset.user_name,
-              assetNumber: asset.asset_number,
-              bill: asset.asset_bill,
-              buyDate: this.formatDate(asset.buy_date),
-              price: asset.asset_price,
-              type: asset.asset_type,
-              useDirection: asset.asset_usedirection,
-              leaveNumber: asset.asset_leavenum,
-              brand: asset.asset_brand,
-              state: this.formatState(asset.asset_state),
-              imgUrl: asset.asset_imgurl,
-            }
+                id: asset.id,
+                assetName: asset.asset_name,
+                userName: asset.user_name,
+                assetNumber: asset.asset_number,
+                bill: asset.asset_bill,
+                buyDate: this.formatDate(asset.buy_date),
+                price: asset.asset_price,
+                type: asset.asset_type,
+                standard: asset.asset_standard,
+                leaveDate: asset.asset_leavedate,
+                submitDate: asset.asset_submitdate,
+                useDirection: asset.asset_usedirection,
+                leaveNumber: asset.asset_leavenum,
+                brand: asset.asset_brand,
+                storagePlace: asset.storagePlace,
+                buyer: asset.buyer,
+                purchaser: asset.asset_purchaser,
+                attachNum: asset.asset_attachnum,
+                attachAmount: asset.asset_attachamount,
+                funds: asset.funds,
+                signature: asset.asset_signature,
+                organization: asset.organization,
+                state: this.formatState(asset.asset_state),
+                imgUrl: asset.asset_imgurl,
+              }
             this.tableData.push(item)
           })
         }
@@ -290,20 +211,31 @@ export default {
           console.log(res.data[1])
           res.data[1].forEach((asset) => {
             let item = {
-              id: asset.id,
-              assetName: asset.asset_name,
-              userName: asset.user_name,
-              assetNumber: asset.asset_number,
-              bill: asset.asset_bill,
-              buyDate: this.formatDate(asset.buy_date),
-              price: asset.asset_price,
-              type: asset.asset_type,
-              useDirection: asset.asset_usedirection,
-              leaveNumber: asset.asset_leavenum,
-              brand: asset.asset_brand,
-              state: this.formatState(asset.asset_state),
-              imgUrl: asset.asset_imgurl,
-            }
+                id: asset.id,
+                assetName: asset.asset_name,
+                userName: asset.user_name,
+                assetNumber: asset.asset_number,
+                bill: asset.asset_bill,
+                buyDate: this.formatDate(asset.buy_date),
+                price: asset.asset_price,
+                type: asset.asset_type,
+                standard: asset.asset_standard,
+                leaveDate: asset.asset_leavedate,
+                submitDate: asset.asset_submitdate,
+                useDirection: asset.asset_usedirection,
+                leaveNumber: asset.asset_leavenum,
+                brand: asset.asset_brand,
+                storagePlace: asset.storagePlace,
+                buyer: asset.buyer,
+                purchaser: asset.asset_purchaser,
+                attachNum: asset.asset_attachnum,
+                attachAmount: asset.asset_attachamount,
+                funds: asset.funds,
+                signature: asset.asset_signature,
+                organization: asset.organization,
+                state: this.formatState(asset.asset_state),
+                imgUrl: asset.asset_imgurl,
+              }
             this.tableData.push(item)
           })
         }
@@ -388,7 +320,7 @@ export default {
     font-size: 0;
   }
   .el-table__expanded-cell .table-expand label {
-    width: 90px;
+    width: 120px;
     color: #99a9bf;
   }
   .el-table__expanded-cell .table-expand .el-form-item {

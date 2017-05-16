@@ -53,20 +53,22 @@
           prop="id"
           label="操作">
           <template scope="id">
-            <el-button
-              size="mini"
-              @click="check(id.$index, id.row.id, 'PASS')">通过</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="check(id.$index, id.row.id, 'REJECT')">不通过</el-button>
+            <el-button-group>
+              <el-button :plain="true" type="primary" size="small" icon="check" @click="check(id.$index, id.row.id, 'PASS')"></el-button>
+              <el-button :plain="true" type="danger" size="small" icon="close" @click="confirmReject(id.$index, id.row.id, 'REJECT')"></el-button>
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>
       <div class="page">
         <el-pagination
+          small
+          v-if="totalCount > 10"
           layout="prev, pager, next"
-          :total="1000">
+          :total="totalCount"
+          :current-page="currentPage"
+          :page-sizes="pageSizeChange"
+          @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -81,7 +83,10 @@ export default {
         assetName: '',
         address: '',
       },
-      tableData: []
+      tableData: [],
+      pageSizeChange: [2,3,4],
+      currentPage: 1,
+      totalCount: 0,
     }
   },
   created() {
@@ -100,15 +105,22 @@ export default {
         return '未通过'
       }
     },
+    handleCurrentChange(val) {
+      console.log(val)
+      this.currentPage = val
+      this.queryCallList()
+    },
     queryCallList() {
       console.log('查询了')
-      this.$http.get('/api/call/query-call-list')
-        .then((res) => {
+      this.$http.post('/api/call/query-call-list', {
+        page: (this.currentPage - 1) * 10,
+        size: 10
+      }).then((res) => {
           if (res.status === 200) {
-            console.log('返回的数据是')
-            console.log(res.data)
+            this.totalCount = res.data[0][0].totalCount
+            this.tableData = []
 
-            res.data.forEach((item) => {
+            res.data[1].forEach((item) => {
               let tableItem = {
                 assetName: item.asset_name,
                 oldUserName: item.old_user,
@@ -134,16 +146,35 @@ export default {
             this.tableData.splice(index, 1);
             this.$message({
               type: 'success',
-              message: '同意调用'
+              message: '操作成功'
             })
           } else {
             this.$message({
               type: 'danger',
-              message: '拒绝调用'
+              message: '操作失败'
             })
           }
         })
-    }
+    },
+    confirmReject(index, id, state) {
+      this.$confirm('您确定要拒绝此调用申请吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log(index, id)
+        this.check(index, id, state)
+        this.$message({
+          type: 'success',
+          message: '已拒绝调用申请'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消操作'
+        });
+      });
+    },
   }
 }
 </script>

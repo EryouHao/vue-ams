@@ -60,6 +60,10 @@ app.use('/api/upload', uploadApi);
 app.use('/api/export', exportApi);
 app.use('/api/import', importApi);
 
+// 日志
+const log = require('./util/log')
+log.info('hello')
+
 // 访问静态资源文件，这里是访问所有dist目录下的静态资源文件
 // ...
 

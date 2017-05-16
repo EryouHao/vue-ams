@@ -73,44 +73,6 @@ module.exports = {
         })
     })
   },
-  // 查询资产
-  queryAssetById: function (id,cb) {
-    pool.getConnection((err, connection) => {
-      if (err) throw err
-      const sql = `
-        select assets.*, users.user_name
-        from assets, users
-        where
-        assets.user_id = ? and assets.user_id = users.id
-      `
-      connection.query(sql, id, (err, result) => {
-        if (err) throw err
-
-        cb(result)
-
-        connection.release()
-      })
-    })
-  },
-  // 通过用户id查询已申报通过的资产
-  queryPassAssetById: function (id, cb) {
-    pool.getConnection((err, connection) => {
-      if (err) throw err
-      const sql = `
-        select assets.*, users.user_name
-        from assets, users
-        where
-        assets.user_id = ? and assets.user_id = users.id and assets.asset_state = 1
-      `
-      connection.query(sql, id, (err, result) => {
-        if (err) throw err
-
-        cb(result)
-
-        connection.release()
-      })
-    })
-  },
   // 通过用户id查询可调用的资产
   queryUncallAsset: function (id, cb) {
     pool.getConnection((err, connection) => {
@@ -128,30 +90,18 @@ module.exports = {
       })
     })
   },
-  // 查询已审核的的所有资产
-  queryAllAsset: function (cb) {
-    pool.getConnection((err, conn) => {
-      if (err) throw err
-      const sql = `
-        select a.*, u.user_name
-        from assets a, users u
-        where a.asset_state = 1 and a.user_id = u.id
-      `
-      conn.query(sql, (err, result) => {
-        if (err) throw err
-        console.log(result)
-        cb(result)
-        conn.release()
-      })
-    })
-  },
   // 查询未审核资产
   queryAssetUncheck: function (cb) {
     pool.getConnection((err, conn) => {
       if (err) throw err
       const sql = `
-        select assets.*, users.user_name
-        from assets, users
+        select a.*, u.user_name,r1.name storagePlace, r2.name buyer, r3.name funds, r4.name organization
+        from assets as a
+          left join users as u on a.user_id = u.id
+          left join resource as r1 on r1.id = a.asset_storageplace
+          left join resource as r2 on r2.id = a.asset_buyer
+          left join resource as r3 on r3.id = a.funds_id
+          left join resource as r4 on r4.id = a.asset_orgid
         where assets.asset_state=0 and assets.user_id = users.id
       `
       conn.query(sql, (err, result) => {
@@ -193,32 +143,6 @@ module.exports = {
       })
     })
   },
-  // 资产调用
-  callAsset: function (id, form, cb) {
-    pool.getConnection((err, conn) => {
-      if (err) throw err
-      const sql = `
-        insert into calls
-        (asset_id, new_user_id, new_storage_place_id, comment)
-        values (?, ?, ?, ?);
-        update assets
-        set calling = 1
-        where id = ?;
-      `
-      const params = [
-        id,
-        form.newUserId,
-        form.newStoragePlace,
-        form.comment,
-        id
-      ]
-      conn.query(sql, params, (err, result) => {
-        if (err) throw err
-        cb(result)
-        conn.release()
-      })
-    })
-  },
 
   // 查询系统资产总数
   queryAllAssetCount: function (cb) {
@@ -254,7 +178,7 @@ module.exports = {
     })
   },
 
-  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- 管理员
+  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- (已通过审核资产)管理员
   queryCurrentPageAsset: function (page, size, cb) {
     console.log(page, size)
     pool.getConnection((err, conn) => {
@@ -262,9 +186,14 @@ module.exports = {
       const sql = `
         select count(1) as totalCount from assets where asset_state = 1;
 
-        select a.*, u.user_name
-        from assets a, users u
-        where a.asset_state = 1 and a.user_id = u.id
+        select a.*, u.user_name,r1.name storagePlace, r2.name buyer, r3.name funds, r4.name organization
+        from assets as a
+          left join users as u on a.user_id = u.id
+          left join resource as r1 on r1.id = a.asset_storageplace
+          left join resource as r2 on r2.id = a.asset_buyer
+          left join resource as r3 on r3.id = a.funds_id
+          left join resource as r4 on r4.id = a.asset_orgid
+        where a.asset_state=1
         order by id
         limit ?, ?;
       `
@@ -276,7 +205,7 @@ module.exports = {
     })
   },
 
-  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- 普通教师
+  // 查询当前页资产列表，返回指定数目数据和条件资产总数 ---- (已通过审核资产）普通教师
   queryPersonCurrentPageAsset: function (id, page, size, cb) {
     console.log(page, size)
     pool.getConnection((err, conn) => {
@@ -284,9 +213,14 @@ module.exports = {
       const sql = `
         select count(1) as totalCount from assets where user_id = ? and asset_state = 1;
 
-        select a.*, u.user_name
-        from assets a, users u
-        where a.user_id = ? and a.asset_state = 1 and a.user_id = u.id
+        select a.*, u.user_name,r1.name storagePlace, r2.name buyer, r3.name funds, r4.name organization
+        from assets as a
+          left join users as u on a.user_id = u.id
+          left join resource as r1 on r1.id = a.asset_storageplace
+          left join resource as r2 on r2.id = a.asset_buyer
+          left join resource as r3 on r3.id = a.funds_id
+          left join resource as r4 on r4.id = a.asset_orgid
+        where a.asset_state=1 and a.user_id = ?
         order by id
         limit ?, ?;
       `
@@ -305,9 +239,14 @@ module.exports = {
       const sql = `
         select count(1) as totalCount from assets where asset_state = 0;
 
-        select a.*, u.user_name
-        from assets a, users u
-        where a.asset_state = 0 and a.user_id = u.id
+        select a.*, u.user_name,r1.name storagePlace, r2.name buyer, r3.name funds, r4.name organization
+        from assets as a
+          left join users as u on a.user_id = u.id
+          left join resource as r1 on r1.id = a.asset_storageplace
+          left join resource as r2 on r2.id = a.asset_buyer
+          left join resource as r3 on r3.id = a.funds_id
+          left join resource as r4 on r4.id = a.asset_orgid
+        where a.asset_state=0
         order by id
         limit ?, ?;
       `
@@ -318,4 +257,40 @@ module.exports = {
       })
     })
   },
+  // 通过用户id查询正在审核和正在调用资产列表 ---- 普通教师
+  queryDoing: function (id, page, size, cb) {
+    pool.getConnection((err, conn) => {
+      const sql = `
+        select count(1) as totalCount from assets where user_id = ? and (asset_state = 0 or calling = 1);
+
+        select * from assets
+        where user_id = ? and (asset_state = 0 or calling = 1)
+        order by id
+        limit ?, ?;
+      `
+      conn.query(sql, [id, id, page, size], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
+  // 查询最近的待审核和待调用的资产列表 ---- 管理员
+  queryAllDoing: function (page, size, cb) {
+    pool.getConnection((err, conn) => {
+      const sql = `
+        select count(1) as totalCount from assets where asset_state = 0 or calling = 1;
+
+        select * from assets
+        where (asset_state = 0 or calling = 1)
+        order by id
+        limit ?, ?;
+      `
+      conn.query(sql, [page, size], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  }
 }

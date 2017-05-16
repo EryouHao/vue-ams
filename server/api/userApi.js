@@ -4,9 +4,6 @@ var router = express.Router();
 var mysql = require('mysql');
 var $sql = require('../sql/sqlString');
 var $util = require('../util/util');
-// 登录验证所用模块
-const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt');
 
 var user_m = require('../models/user');
 var bodyParser = require('body-parser').json();
@@ -26,12 +23,9 @@ var jsonWrite = function(res, ret) {
 router.post('/login', (req, res, next) => {
 	var username = req.body.username || '',
 		password = req.body.password || '';
-		console.log(req.body);
 	var password_hash = user_m.hash(password);
 
 	user_m.login(username, password_hash, function (result) {
-		console.log('登录方法得到的results是')
-		console.log(result)
 		if (result.length) {
 			// 将数据保存到名为user的session中
 			req.session.user = {
@@ -45,10 +39,8 @@ router.post('/login', (req, res, next) => {
 				userright: req.session.user.userright
 			}
 			jsonWrite(res, result)
-			console.log('登录成功');
 			// res.redirect('/');
 		} else {
-      console.log('登录失败！');
       return res.json({status: 404, message: '登录失败'});
 
 		}

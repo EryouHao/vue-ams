@@ -156,6 +156,7 @@ export default {
     },
     queryAssetById() {
       console.log('查询了')
+      this.tableData = []
       this.$http.get('/api/asset/query-uncall')
         .then((res) => {
           if (res.status === 200) {
@@ -195,11 +196,21 @@ export default {
 
       // 根据 indexOf 求出所选资产的 index
       // TODO...
-
-      this.$http.post('/api/asset/call-asset', form)
+      const self = this
+      this.$http.post('/api/call/call-asset', form)
         .then((res) => {
-          console.log(res)
-          this.$router.push('/callasset')
+          if (res.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '申请成功'
+            })
+            self.queryAssetById()
+          } else {
+            this.$message({
+              type: 'success',
+              message: '申请失败'
+            })
+          }
         })
     }
   }

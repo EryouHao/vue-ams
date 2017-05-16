@@ -20,11 +20,28 @@ var jsonWrite = function(res, ret) {
 	}
 };
 
+// 资产调用
+router.post('/call-asset', (req, res) => {
+	const form = req.body
+	if (req.session.user !== null) {
+    let result
+		form.selectIdList.forEach((id) => {
+			call_m.callAsset(id, form, (result) => {
+				console.log('资产调用成功-api')
+				result = result
+			})
+		})
+    jsonWrite(res, result)
+	} else {
+		console.log('你需要登录才可以操作哦!')
+	}
+})
 
-// 查询资产
-router.get('/query-call-list', (req, res) => {
+// 查询当前页资产调用列表
+router.post('/query-call-list', (req, res) => {
+  const params = req.body
   if (req.session.user !== null) {
-    call_m.queryCallList((result) => {
+    call_m.queryCallList(params.page, params.size, (result) => {
       console.log('查询成功！')
       jsonWrite(res, result)
       // console.log(res)
