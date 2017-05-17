@@ -114,5 +114,8 @@ export default {
 </script>
 
 <style lang="css">
-
+  .page {
+    margin: 20px auto 40px;
+    text-align: right;
+  }
 </style>
