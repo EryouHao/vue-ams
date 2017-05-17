@@ -107,7 +107,6 @@ router.post('/query-current-page', (req, res) => {
   const params = req.body
   if (req.session.user !== null) {
     asset_m.queryCurrentPageAsset(params.page, params.size, (result) => {
-      console.log(result)
       jsonWrite(res, result)
     })
   }
@@ -119,7 +118,6 @@ router.post('/query-person-current-page', (req, res) => {
   if (req.session.user !== null) {
     const id = req.session.user.uid
     asset_m.queryPersonCurrentPageAsset(id, params.page, params.size, (result) => {
-      console.log(result)
       jsonWrite(res, result)
     })
   }
@@ -130,7 +128,6 @@ router.post('/query-uncheck-current-page', (req, res) => {
   const params = req.body
   if (req.session.user !== null) {
     asset_m.queryUncheckCurrentPageAsset(params.page, params.size, (result) => {
-      console.log(result)
       jsonWrite(res, result)
     })
   }
