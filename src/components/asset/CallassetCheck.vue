@@ -1,6 +1,6 @@
 <template>
   <div class="callasset-check">
-    <h2>调用审核待审列表</h2>
+    <h2>待审列表</h2>
     <div class="result-content">
       <el-table
       :data="tableData"

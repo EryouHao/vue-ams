@@ -2,17 +2,11 @@
   <div class="query-asset">
     <div class="query-content">
       <el-form ref="form" :inline="true" :model="form" label-width="80px">
-        <el-form-item label="资产名称">
-          <el-input v-model="form.assetName"></el-input>
-        </el-form-item>
-        <el-form-item label="存放地点">
-          <el-select v-model="form.address" placeholder="存放地点">
-            <el-option label="C1-202" value="shanghai"></el-option>
-            <el-option label="C1-209" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="资产编号">
+          <el-input v-model="form.assetNumber"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="search">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="success" @click="exportExcel">导出Excel</el-button>
@@ -75,8 +69,7 @@ export default {
   data () {
     return {
       form: {
-        assetName: '',
-        address: '',
+        assetNumber: ''
       },
       tableData: [],
       pageSizeChange: [2,3,4],
@@ -172,6 +165,51 @@ export default {
             window.location = 'http://localhost:8090/api/export/export-excel'
           }
         })
+    },
+    search() {
+      if (this.form.assetNumber === '') {
+        this.requestForCurrentPage()
+      } else {
+        this.$http.post('/api/search/search', this.form)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log('搜索成功')
+            console.log(res.data)
+            this.tableData = []
+            this.totalCount = 0
+
+            const asset = res.data[0]
+
+            let item = {
+              id: asset.id,
+              assetName: asset.asset_name,
+              userName: asset.user_name,
+              assetNumber: asset.asset_number,
+              bill: asset.asset_bill,
+              buyDate: this.formatDate(asset.buy_date),
+              price: asset.asset_price,
+              type: asset.asset_type,
+              standard: asset.asset_standard,
+              leaveDate: asset.asset_leavedate,
+              submitDate: asset.asset_submitdate,
+              useDirection: asset.asset_usedirection,
+              leaveNumber: asset.asset_leavenum,
+              brand: asset.asset_brand,
+              storagePlace: asset.storagePlace,
+              buyer: asset.buyer,
+              purchaser: asset.asset_purchaser,
+              attachNum: asset.asset_attachnum,
+              attachAmount: asset.asset_attachamount,
+              funds: asset.funds,
+              signature: asset.asset_signature,
+              organization: asset.organization,
+              state: this.formatState(asset.asset_state),
+              imgUrl: asset.asset_imgurl,
+            }
+            this.tableData.push(item)
+          }
+        })
+      }
     },
   }
 }

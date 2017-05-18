@@ -8,6 +8,7 @@ const resourceApi = require('./api/resourceApi');
 const uploadApi = require('./api/uploadApi');
 const exportApi = require('./api/exportApi');
 const importApi = require('./api/importApi');
+const searchApi = require('./api/searchApi');
 
 // 引入文件模块
 const fs = require('fs');
@@ -69,6 +70,7 @@ app.use('/api/resource', resourceApi);
 app.use('/api/upload', uploadApi);
 app.use('/api/export', exportApi);
 app.use('/api/import', importApi);
+app.use('/api/search', searchApi);
 
 // 日志
 const log = require('./util/log')

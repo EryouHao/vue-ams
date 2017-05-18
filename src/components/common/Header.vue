@@ -20,7 +20,7 @@
       </el-col>
       <el-col :span="4">
         <el-menu mode="horizontal">
-          <el-menu-item index="7">{{ username }}</el-menu-item>
+          <el-menu-item index="7" class="is-active">{{ username }}</el-menu-item>
           <el-button class="logout" :plain="true" type="danger" @click="logout">退出系统</el-button>
         </el-menu>
       </el-col>

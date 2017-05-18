@@ -1,21 +1,9 @@
 <template>
   <div class="query-asset">
     <div class="query-content">
-      <el-form ref="form" :inline="true" :model="form" label-width="80px">
-        <el-form-item label="资产名称">
-          <el-input v-model="form.assetName"></el-input>
-        </el-form-item>
-        <el-form-item label="存放地点">
-          <el-select v-model="form.address" placeholder="存放地点">
-            <el-option label="C1-202" value="shanghai"></el-option>
-            <el-option label="C1-209" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary">查询</el-button>
-        </el-form-item>
-      </el-form>
     </div>
+    <h2 v-if="right === 'ADMIN'">待审列表</h2>
+    <h2 v-if="right === 'TEACHER'">资产列表</h2>
     <div class="result-content">
       <el-table
       :data="tableData"
