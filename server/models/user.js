@@ -78,15 +78,24 @@ module.exports = {
 
   // 删除用户
   deleteUser: function (id, cb) {
-    pool.getConnection((err, connection) => {
+    pool.getConnection((err, conn) => {
       if (err) throw err;
-      connection.query('DELETE FROM `users` WHERE id=?', id, (err, results) => {
+      const sql = `
+        delete from users
+        where id not in (
+          select u.id from assets
+            inner join (select * from users) as u on assets.user_id = u.id
+        ) and id = ?
+      ` // mysql 不能在判断条件中再from要更新的表 故 采用 select ... as u
+      conn.query(sql, id, (err, result) => {
+        console.log('------result------')
+        console.log(result.affectedRows);
+        // console.log(result.length);
         if (err) throw err;
-
-        cb(results);
-
-        connection.release();
+        cb(result);
+        conn.release();
       })
+
     })
   },
 

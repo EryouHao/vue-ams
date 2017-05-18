@@ -114,11 +114,19 @@ export default {
             id: id
         }).then((res) => {
           // 待添加 前端 用户数组减少
-          this.queryAllUser()
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          console.log(res)
+          if(res.data.status === 'ERROR') {
+            this.$message({
+              type: 'info',
+              message: '此用户已拥有资产，不允许删除！'
+            });
+          } else {
+            this.queryAllUser()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }
         }).catch(() => {
           this.$message({
             type: 'info',

@@ -101,8 +101,15 @@ router.post('/addUser', (req, res) => {
 // 删除用户接口
 router.post('/deleteUser', (req, res) => {
   user_m.deleteUser(req.body.id, (result) => {
-    console.log('删除用户成功')
-    console.log(result)
+
+    // 判断是否可删除
+    if (result.affectedRows === 0) {
+      console.log('不允许删除')
+      result.status = 'ERROR' // 此用户已经使用过，不让删除
+    } else {
+      console.log('删除用户成功')
+      result.status = 'SUCCESS' // 此用户还未使用，可以删除
+    }
 		jsonWrite(res, result)
   })
 });
