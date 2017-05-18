@@ -3,7 +3,6 @@ var pool = require('../conf/db');
 // 系统搜索功能模块
 module.exports = {
   searchAssetByNumber(number, cb) {
-    console.log(number)
     pool.getConnection((err, conn) => {
       if (err) throw err
       const sql = `
@@ -22,5 +21,23 @@ module.exports = {
         conn.release()
       })
     })
-  }
+  },
+  searchAssetByspId(userId,spId,cb) {
+    console.log('传进来的参数是')
+    console.log(userId, spId);
+    pool.getConnection((err, conn) => {
+      if (err) throw err
+      const sql = `
+        select a.*, u.user_name
+        from assets a, users u
+        where
+        a.user_id = ? and a.asset_storageplace = ? and a.user_id = u.id and a.asset_state = 1 and a.calling = 0
+      `
+      conn.query(sql, [userId, spId], (err, result) => {
+        if (err) throw err
+        cb(result)
+        conn.release()
+      })
+    })
+  },
 }

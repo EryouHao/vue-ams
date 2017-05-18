@@ -20,7 +20,7 @@ var jsonWrite = function(res, ret) {
 	}
 };
 
-// 资产调用
+// 通过资产编号查询资产
 router.post('/search', (req, res) => {
 	const form = req.body
 	if (req.session.user !== null) {
@@ -32,6 +32,19 @@ router.post('/search', (req, res) => {
 	} else {
 		console.log('你需要登录才可以操作哦!')
 	}
+})
+
+// 通过用户id和存放地点查询资产
+router.post('/search-storageplace', (req, res) => {
+  const form = req.body
+  if (req.session.user !== null) {
+    const id = req.session.user.uid
+    search_m.searchAssetByspId(id, form.storagePlaceId, (result) => {
+      jsonWrite(res, result)
+    })
+  } else {
+    console.log('你需要登录才可以操作哦！')
+  }
 })
 
 module.exports = router;

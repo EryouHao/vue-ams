@@ -2,17 +2,13 @@
   <div class="callasset">
     <div class="query-content">
       <el-form ref="form" :inline="true" :model="form" label-width="80px">
-        <el-form-item label="资产名称">
-          <el-input v-model="form.assetName"></el-input>
-        </el-form-item>
         <el-form-item label="存放地点">
-          <el-select v-model="form.address" placeholder="存放地点">
-            <el-option label="C1-202" value="shanghai"></el-option>
-            <el-option label="C1-209" value="beijing"></el-option>
+          <el-select v-model="form.storagePlaceId" props="storagePlaces" placeholder="存放地点">
+            <el-option v-for="(sp, index) in storagePlaces" :key="index" :label="sp.name" :value="sp.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="">查询</el-button>
+          <el-button type="primary" @click="search">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -89,8 +85,7 @@ export default {
   data () {
     return {
       form: {
-        assetName: '',
-        address: '',
+        storagePlaceId: '',
       },
       form2: {
         newUserId: '',
@@ -212,7 +207,34 @@ export default {
             })
           }
         })
-    }
+    },
+    search() {
+      this.$http.post('/api/search/search-storageplace', this.form)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data)
+            this.tableData = []
+
+            res.data.forEach((asset) => {
+              let item = {
+                id: asset.id,
+                assetName: asset.asset_name,
+                userName: asset.user_name,
+                userId: asset.user_id,
+                assetNumber: asset.asset_number,
+                bill: asset.asset_bill,
+                buyDate: this.formatDate(asset.buy_date),
+                price: asset.asset_price,
+                type: asset.asset_type,
+                useDirection: asset.asset_usedirection,
+                leaveNumber: asset.asset_leavenum,
+                brand: asset.asset_brand,
+              }
+              this.tableData.push(item)
+            })
+          }
+        })
+    },
   }
 }
 </script>
