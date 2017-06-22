@@ -46,13 +46,10 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key, keyPath)
     },
     logout() {
-      console.log('执行了')
       this.$http.get('/api/user/logout')
         .then ((res) => {
-          console.log('登出了')
           if (res.status === 200) {
             // this.delCookie('hellocookie')
             localStorage.removeItem('user')

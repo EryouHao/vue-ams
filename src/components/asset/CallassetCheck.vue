@@ -106,12 +106,10 @@ export default {
       }
     },
     handleCurrentChange(val) {
-      console.log(val)
       this.currentPage = val
       this.queryCallList()
     },
     queryCallList() {
-      console.log('查询了')
       this.$http.post('/api/call/query-call-list', {
         page: (this.currentPage - 1) * 10,
         size: 10
@@ -130,7 +128,6 @@ export default {
                 comment: item.comment,
                 id: item.id
               }
-              console.log(tableItem)
               this.tableData.push(tableItem)
             })
           }
@@ -139,7 +136,6 @@ export default {
         })
     },
     check(index, id, state) {
-      console.log(index, id, state)
       this.$http.post('/api/call/check-call', {id: id, state: state})
         .then((res) => {
           if (res.status === 200) {
@@ -162,7 +158,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(index, id)
         this.check(index, id, state)
         this.$message({
           type: 'success',

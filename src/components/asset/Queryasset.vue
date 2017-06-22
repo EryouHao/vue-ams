@@ -152,9 +152,7 @@ export default {
       }).then((res) => {
         if (res.status === 200) {
           this.totalCount = res.data[0][0].totalCount
-          console.log('totalCount' + this.totalCount)
           this.tableData = []
-          console.log(res.data[1])
           res.data[1].forEach((asset) => {
             let item = {
                 id: asset.id,
@@ -194,9 +192,7 @@ export default {
       }).then((res) => {
         if (res.status === 200) {
           this.totalCount = res.data[0][0].totalCount
-          console.log('totalCount' + this.totalCount)
           this.tableData = []
-          console.log(res.data[1])
           res.data[1].forEach((asset) => {
             let item = {
                 id: asset.id,
@@ -235,7 +231,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(id, rejectNum)
         this.check(id, rejectNum, 2)
       }).catch(() => {
         this.$message({

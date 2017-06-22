@@ -94,7 +94,6 @@ export default {
   },
   created() {
     this.requestForCurrentPage()
-    console.log(this.tableData)
   },
   methods: {
     formatDate(date) {
@@ -110,7 +109,6 @@ export default {
       }
     },
     handleCurrentChange(val) {
-      console.log(val)
       this.currentPage = val
       this.requestForCurrentPage()
     },
@@ -121,9 +119,7 @@ export default {
       }).then((res) => {
         if (res.status === 200) {
           this.totalCount = res.data[0][0].totalCount
-          console.log('totalCount' + this.totalCount)
           this.tableData = []
-          console.log(res.data[1])
           res.data[1].forEach((asset) => {
             let item = {
                 id: asset.id,
@@ -161,7 +157,6 @@ export default {
       this.$http.get('/api/export/export-excel')
         .then((res) => {
           if (res.status === 200) {
-            console.log('ｄａｏｃｈｕ')
             window.location = 'http://localhost:8090/api/export/export-excel'
           }
         })
@@ -173,8 +168,6 @@ export default {
         this.$http.post('/api/search/search', this.form)
         .then((res) => {
           if (res.status === 200) {
-            console.log('搜索成功')
-            console.log(res.data)
             this.tableData = []
             this.totalCount = 0
 

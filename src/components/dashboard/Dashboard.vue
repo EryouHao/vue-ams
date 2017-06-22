@@ -109,7 +109,6 @@ export default {
             this.assetCount = res.data[0][0].assetCount
             this.unCheckAssetCount = res.data[1][0].unCheckAssetCount
             this.callAssetCount = res.data[2][0].callAssetCount
-            console.log(res.data)
           }
         }).catch((err) => {
           console.log(err)
@@ -122,7 +121,6 @@ export default {
             this.assetCount = res.data[0][0].assetCount
             this.unCheckAssetCount = res.data[1][0].unCheckAssetCount
             this.callAssetCount = res.data[2][0].callAssetCount
-            console.log(res.data)
           }
         }).catch((err) => {
           console.log(err)
@@ -145,7 +143,6 @@ export default {
         size: 10
       }).then((res) => {
           if (res.status === 200) {
-            console.log(res.data)
             this.totalCount = res.data[0][0].totalCount
             this.tableData = []
             res.data[1].forEach((item) => {
@@ -161,13 +158,11 @@ export default {
         })
     },
     queryAllDoing() {
-      console.log('1')
       this.$http.post('/api/asset/query-all-doing', {
         page: (this.currentPage - 1) * 10,
         size: 10
       }).then((res) => {
           if (res.status === 200) {
-            console.log(res.data)
             this.totalCount = res.data[0][0].totalCount
             this.tableData = []
             res.data[1].forEach((item) => {

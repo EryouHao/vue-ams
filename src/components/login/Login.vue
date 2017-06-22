@@ -36,7 +36,6 @@
           password: this.form.password
         }).then ((res) => {
           if (res.status === 200 && res.data.status !== 404) {
-            console.log(res)
             localStorage.setItem('user', JSON.stringify(res.data[0]))
             this.$router.push({ path: '/dashboard' })
             this.$message({

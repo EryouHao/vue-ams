@@ -175,7 +175,6 @@
       </el-row>
       <el-form-item>
         <el-button type="primary" @click="submit">保存</el-button>
-        <el-button @click="show">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -232,25 +231,17 @@ export default {
     this.queryBuyer()
   },
   methods: {
-    show() {
-      console.log(this.form)
-    },
     formatDate(date) {
       return moment(date).format('YYYY-MM-DD')
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-      console.log(file)
       // this.form.imgUrl = file.url;
       this.dialogVisible = true;
 
     },
     uploadSuccess(res, file, fileList) {
-      console.log(res)
-      console.log('file对象为')
-      console.log(file)
       this.form.imgUrl = res.path
     },
     // 填充使用人列表
@@ -330,9 +321,7 @@ export default {
       this.form.leaveDate = this.formatDate(this.form.leaveDate)
       this.form.submitDate = this.formatDate(this.form.submitDate)
       if (this.form.count > 1) {
-        console.log(this.form.count)
       }
-      console.log(this.form)
       // this.$refs.upload.submit() // 上传图片
       this.$http.post('/api/asset/add', this.form)
         .then((res) => {

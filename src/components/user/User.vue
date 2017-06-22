@@ -27,10 +27,10 @@
       </el-table-column>
       <el-table-column label="操作" prop="id">
         <template scope="id">
-          <el-button
+          <!-- <el-button
             size="small"
             icon="edit"
-            @click="editUser(id.row.id)"></el-button>
+            @click="editUser(id.row.id)"></el-button> -->
           <el-button
             size="small"
             type="danger"
@@ -103,8 +103,6 @@ export default {
       this.showAddUser = !this.showAddUser;
     },
     deleteUser(id) {
-      console.log('id为')
-      console.log(id)
       this.$confirm('您确定要删除此用户吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -114,7 +112,6 @@ export default {
             id: id
         }).then((res) => {
           // 待添加 前端 用户数组减少
-          console.log(res)
           if(res.data.status === 'ERROR') {
             this.$message({
               type: 'info',

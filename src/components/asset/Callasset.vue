@@ -118,7 +118,6 @@ export default {
     },
     handleSelectionChange(val) {
       this.selectList = val;
-      console.log(this.selectList)
     },
     // 填充使用人列表
     queryUserList() {
@@ -150,12 +149,10 @@ export default {
         })
     },
     queryAssetById() {
-      console.log('查询了')
       this.tableData = []
       this.$http.get('/api/asset/query-uncall')
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
             res.data.forEach((asset) => {
               let item = {
                 id: asset.id,
@@ -173,9 +170,7 @@ export default {
               }
               this.tableData.push(item)
             })
-            console.log(this.tableData)
           }
-          console.log(this.tableData)
         }).catch((err) => {
           console.log(err)
         })
@@ -187,7 +182,6 @@ export default {
         newStoragePlace: this.form2.newStoragePlace,
         comment: this.form2.comment
       }
-      console.log(form)
 
       // 根据 indexOf 求出所选资产的 index
       // TODO...
@@ -212,7 +206,6 @@ export default {
       this.$http.post('/api/search/search-storageplace', this.form)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data)
             this.tableData = []
 
             res.data.forEach((asset) => {
