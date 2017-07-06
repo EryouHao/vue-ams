@@ -1,6 +1,17 @@
 # ams
 
 > A Vue.js project for asset management system
+> 一个基于Vue.js+Node.js+MySQL的资产管理系统
+
+前端采用Element-UI框架、后端采用Express框架。此项目实现了以下功能
+
+1.用户管理（用户登录、删除、基本信息修改）
+
+2.资产管理（资产增加、上传图片、资产申报、资产调用、资产导出）
+
+3.字典管理（增加字典）
+
+4....
 
 ## Build Setup
 
